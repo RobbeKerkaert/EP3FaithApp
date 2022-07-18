@@ -7,7 +7,16 @@
 
     <fragment
         android:id="@+id/titleFragment"
-        android:name="com.example.faith.TitleFragment"
+        android:name="com.example.faith.HomeFragment"
         android:label="fragment_title"
-        tools:layout="@layout/fragment_title" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_titleFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.faith.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
 </navigation>
