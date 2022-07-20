@@ -20,7 +20,7 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = DataBindingUtil.inflate<FragmentHomeBinding>(inflater, R.layout.fragment_home, container, false)
         binding.loginButton.setOnClickListener { view: View ->
-            view.findNavController().navigate(R.id.action_titleFragment_to_loginFragment)
+            view.findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
         }
         return binding.root
     }

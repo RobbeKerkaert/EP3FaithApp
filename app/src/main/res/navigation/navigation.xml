@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/titleFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/titleFragment"
+        android:id="@+id/homeFragment"
         android:name="com.example.faith.HomeFragment"
-        android:label="fragment_title"
-        tools:layout="@layout/fragment_home" >
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_titleFragment_to_loginFragment"
+            android:id="@+id/action_homeFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.faith.LoginFragment"
+        android:name="com.example.faith.ui.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" />
 </navigation>
