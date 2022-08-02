@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.faith.database.post.Post
+import com.example.faith.database.post.DatabasePost
 import com.example.faith.database.post.PostDatabaseDao
 
-@Database(entities = [Post::class], version = 1, exportSchema = false)
+@Database(entities = [DatabasePost::class], version = 1, exportSchema = false)
 abstract class FaithDatabase() : RoomDatabase() {
 
     abstract val postDatabaseDao: PostDatabaseDao
@@ -31,10 +31,6 @@ abstract class FaithDatabase() : RoomDatabase() {
                         FaithDatabase::class.java,
                         "faith_database"
                     )
-                        // Wipes and rebuilds instead of migrating if no Migration object.
-                        // Migration is not part of this lesson. You can learn more about
-                        // migration with Room in this blog post:
-                        // https://medium.com/androiddevelopers/understanding-migrations-with-room-f01e04b07929
                         .fallbackToDestructiveMigration()
                         .build()
                     // Assign INSTANCE to the newly created database.

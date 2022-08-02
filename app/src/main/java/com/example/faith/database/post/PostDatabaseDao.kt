@@ -12,24 +12,24 @@ interface PostDatabaseDao {
      * Creates a new post
      */
     @Insert
-    suspend fun insert(post: Post)
+    suspend fun insert(post: DatabasePost)
 
     /**
      * Updates a post with new info, after an edit.
      */
     @Update
-    suspend fun update(post: Post)
+    suspend fun update(post: DatabasePost)
 
     /**
      * Gets a specific post with the matching key.
      */
     @Query("SELECT * from post_table WHERE postId = :key")
-    suspend fun get(key: Long): Post?
+    suspend fun get(key: Long): DatabasePost?
 
     /**
      * Selects and returns all rows in the table.
      * sorted by id in descending order. Should probably get something else for this.
      */
     @Query("SELECT * FROM post_table ORDER BY postId DESC")
-    fun getAllPosts(): LiveData<List<Post>>
+    fun getAllPosts(): LiveData<List<DatabasePost>>
 }

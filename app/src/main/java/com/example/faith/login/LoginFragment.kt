@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
@@ -21,6 +22,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.DataBindingUtil.setContentView
 import com.example.faith.databinding.FragmentHomeBinding
+import com.example.faith.login.CredentialsManager
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
@@ -42,15 +44,26 @@ class LoginFragment : Fragment() {
             getString(R.string.com_auth0_client_id),
             getString(R.string.com_auth0_domain)
         )
+
         binding = DataBindingUtil.inflate<FragmentLoginBinding>(inflater,
             R.layout.fragment_login, container, false)
 
         binding.buttonLogin.setOnClickListener { login() }
         binding.buttonLogout.setOnClickListener { logout() }
-        binding.buttonGet.setOnClickListener { getUserMetadata() }
-        binding.buttonSet.setOnClickListener { setUserMetadata() }
+
+        checkForValidToken()
 
         return binding.root
+    }
+
+    private fun checkForValidToken(){
+        val token = CredentialsManager.getAccessToken(requireContext())
+        if(token != null){
+            showUserProfile(token)
+        }
+        else {
+            Toast.makeText(context, "Fout opgetreden bij inloggen", Toast.LENGTH_SHORT).show()
+        }
     }
 
     // Login / Logout methods
@@ -70,8 +83,10 @@ class LoginFragment : Fragment() {
                 override fun onSuccess(credentials: Credentials) {
                     cachedCredentials = credentials
                     showSnackBar(getString(R.string.login_success_message, credentials.accessToken))
+                    CredentialsManager.saveCredentials(requireContext(), credentials)
+
+                    checkForValidToken()
                     updateUI()
-                    showUserProfile()
                 }
             })
     }
@@ -97,15 +112,16 @@ class LoginFragment : Fragment() {
             })
     }
 
-    private fun showUserProfile() {
+    private fun showUserProfile(accessToken: String) {
         // Guard against showing the profile when no user is logged in
         if (cachedCredentials == null) {
             return
         }
 
         val client = AuthenticationAPIClient(account)
+
         client
-            .userInfo(cachedCredentials!!.accessToken!!)
+            .userInfo(accessToken)
             .start(object : Callback<UserProfile, AuthenticationException> {
 
                 override fun onFailure(exception: AuthenticationException) {
@@ -116,64 +132,6 @@ class LoginFragment : Fragment() {
                 override fun onSuccess(profile: UserProfile) {
                     cachedUserProfile = profile
                     updateUI()
-                }
-
-            })
-    }
-
-    // Metadata methods
-
-    private fun getUserMetadata() {
-        // Guard against getting the metadata when no user is logged in
-        if (cachedCredentials == null) {
-            return
-        }
-
-        val usersClient = UsersAPIClient(account, cachedCredentials!!.accessToken!!)
-
-        usersClient
-            .getProfile(cachedUserProfile!!.getId()!!)
-            .start(object : Callback<UserProfile, ManagementException> {
-
-                override fun onFailure(exception: ManagementException) {
-                    showSnackBar(getString(R.string.general_failure_with_exception_code,
-                        exception.getCode()))
-                }
-
-                override fun onSuccess(userProfile: UserProfile) {
-                    cachedUserProfile = userProfile
-                    updateUI()
-
-                    val country = userProfile.getUserMetadata()["country"] as String?
-                    binding.edittextCountry.setText(country)
-                }
-
-            })
-    }
-
-    private fun setUserMetadata() {
-        // Guard against getting the metadata when no user is logged in
-        if (cachedCredentials == null) {
-            return
-        }
-
-        val usersClient = UsersAPIClient(account, cachedCredentials!!.accessToken!!)
-        val metadata = mapOf("country" to binding.edittextCountry.text.toString())
-
-        usersClient
-            .updateMetadata(cachedUserProfile!!.getId()!!, metadata)
-            .start(object : Callback<UserProfile, ManagementException> {
-
-                override fun onFailure(exception: ManagementException) {
-                    showSnackBar(getString(R.string.general_failure_with_exception_code,
-                        exception.getCode()))
-                }
-
-                override fun onSuccess(profile: UserProfile) {
-                    cachedUserProfile = profile
-                    updateUI()
-
-                    showSnackBar(getString(R.string.general_success_message))
                 }
 
             })
@@ -191,17 +149,12 @@ class LoginFragment : Fragment() {
         }
         binding.buttonLogin.isEnabled = !isLoggedIn
         binding.buttonLogout.isEnabled = isLoggedIn
-        binding.linearlayoutMetadata.isVisible = isLoggedIn
 
         binding.textviewUserProfile.isVisible = isLoggedIn
 
         val userName = cachedUserProfile?.name ?: ""
         val userEmail = cachedUserProfile?.email ?: ""
         binding.textviewUserProfile.text = getString(R.string.user_profile, userName, userEmail)
-
-        if (!isLoggedIn) {
-            binding.edittextCountry.setText("")
-        }
     }
 
     private fun showSnackBar(text: String) {

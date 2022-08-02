@@ -10,8 +10,11 @@ import androidx.navigation.ui.NavigationUI
 import com.example.faith.R
 import com.example.faith.database.FaithDatabase
 import com.example.faith.databinding.FragmentHomeBinding
+import com.example.faith.domain.Post
 
 class HomeFragment : Fragment() {
+
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,19 +29,33 @@ class HomeFragment : Fragment() {
         val application = requireNotNull(this.activity).application
         val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
         val viewModelFactory = HomeViewModelFactory(dataSource, application)
-        val homeViewModel = ViewModelProviders.of(this, viewModelFactory)
+
+        homeViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(HomeViewModel::class.java)
 
-        binding.homeViewModel = homeViewModel
-
-        binding.setLifecycleOwner(this)
+        val adapter = HomeAdapter(PostListener { })
 
         binding.loginButton.setOnClickListener { view: View ->
             view.findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
         }
+        binding.addButton.setOnClickListener {
+            insertDataToDatabase()
+        }
+
         setHasOptionsMenu(true)
 
+        binding.homeViewModel = homeViewModel
+        binding.lifecycleOwner = this
+        binding.postList.adapter = adapter
+
         return binding.root
+    }
+
+    private fun insertDataToDatabase () {
+        val text = "I AM A TEST"
+
+        val post = Post(0, text)
+        homeViewModel.addPost(post)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
