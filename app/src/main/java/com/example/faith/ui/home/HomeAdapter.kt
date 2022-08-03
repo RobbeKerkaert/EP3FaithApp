@@ -10,8 +10,6 @@ import com.example.faith.domain.Post
 
 class HomeAdapter(val clickListener: PostListener) : ListAdapter<Post, HomeAdapter.ViewHolder>(PostDiffCallback()){
 
-    private var postList = emptyList<Post>()
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(clickListener, item)

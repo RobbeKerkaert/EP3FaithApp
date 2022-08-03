@@ -5,8 +5,12 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.faith.R
 import com.example.faith.database.FaithDatabase
 import com.example.faith.databinding.FragmentHomeBinding
@@ -30,23 +34,30 @@ class HomeFragment : Fragment() {
         val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
         val viewModelFactory = HomeViewModelFactory(dataSource, application)
 
-        homeViewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(HomeViewModel::class.java)
+        setHasOptionsMenu(true)
 
+        // RecyclerView
+        var recyclerView = binding.postList
         val adapter = HomeAdapter(PostListener { })
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        // HomeViewModel
+        binding.lifecycleOwner = this
+
+        homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
+        homeViewModel.posts.observe(viewLifecycleOwner, Observer {
+            adapter.submitList(it)
+        })
+        binding.homeViewModel = homeViewModel
+
+        // OnClickListeners
         binding.loginButton.setOnClickListener { view: View ->
             view.findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
         }
         binding.addButton.setOnClickListener {
             insertDataToDatabase()
         }
-
-        setHasOptionsMenu(true)
-
-        binding.homeViewModel = homeViewModel
-        binding.lifecycleOwner = this
-        binding.postList.adapter = adapter
 
         return binding.root
     }
