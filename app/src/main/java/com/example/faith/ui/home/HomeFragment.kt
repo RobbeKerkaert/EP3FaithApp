@@ -52,11 +52,11 @@ class HomeFragment : Fragment() {
         binding.homeViewModel = homeViewModel
 
         // OnClickListeners
-        binding.loginButton.setOnClickListener { view: View ->
-            view.findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
-        }
-        binding.addButton.setOnClickListener {
+        binding.testAddButton.setOnClickListener {
             insertDataToDatabase()
+        }
+        binding.addPostButton.setOnClickListener { view:View ->
+            view.findNavController().navigate(R.id.action_homeFragment_to_postCreateFragment)
         }
 
         return binding.root

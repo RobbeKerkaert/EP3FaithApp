@@ -2,6 +2,12 @@
     <string name="app_name">FAITH</string>
     <string name="profile">Profile</string>
 
+    <!-- Posts -->
+    <string name="create_post">Create Post</string>
+    <string name="add_post">Add Post</string>
+
+
+
     <!-- Strings related to login | Need to remove this eventually, in favor of auth0 strings -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -43,10 +49,6 @@
         Name: %1$s\n
         Email: %2$s
     </string>
-
-    <!-- Metadata -->
-    <string name="textview_metadata_heading">Metadata</string>
-    <string name="textview_metadata_info">Use the text box and buttons below to get and set the \'country\' field in the user\'s metadata.</string>
 
     <!-- "Get" and "Set" buttons -->
     <string name="button_get">Get</string>
