@@ -6,7 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.navArgs
+import com.example.faith.MainActivity
 import com.example.faith.R
+import com.example.faith.database.FaithDatabase
+import com.example.faith.databinding.PostDetailFragmentBinding
 
 class PostDetailFragment : Fragment() {
 
@@ -16,17 +21,26 @@ class PostDetailFragment : Fragment() {
 
     private lateinit var viewModel: PostDetailViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.post_detail_fragment, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(PostDetailViewModel::class.java)
-        // TODO: Use the ViewModel
+        // For action bar title
+        (activity as MainActivity).supportActionBar?.title = "Post Reactions"
+
+        val binding: PostDetailFragmentBinding =
+            DataBindingUtil.inflate(inflater, R.layout.post_detail_fragment, container, false)
+
+        val arguments = PostDetailFragmentArgs.fromBundle(requireArguments())
+
+        val application = requireNotNull(this.activity).application
+        val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
+
+        val viewModelFactory = PostDetailViewModelFactory(arguments.postId, dataSource)
+        val viewModel = ViewModelProvider(this, viewModelFactory).get(PostDetailViewModel::class.java)
+
+        binding.postDetailViewModel = viewModel
+        binding.lifecycleOwner = this
+
+        return binding.root
     }
 
 }

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
+import com.example.faith.MainActivity
 import com.example.faith.R
 import com.example.faith.database.FaithDatabase
 import com.example.faith.databinding.FragmentHomeBinding
@@ -31,22 +32,27 @@ class PostCreateFragment : Fragment() {
         val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
         val viewModelFactory = PostCreateViewModelFactory(dataSource, application)
 
+        // For action bar title
+        (activity as MainActivity).supportActionBar?.title = "Create Post"
+
         viewModel = ViewModelProvider(this, viewModelFactory).get(PostCreateViewModel::class.java)
 
         binding.lifecycleOwner = this
 
         binding.createPostButton.setOnClickListener {
             insertDataToDatabase(binding)
-
+            it.findNavController().navigate(R.id.action_postCreateFragment_to_homeFragment)
         }
 
         return binding.root
     }
 
-    private fun insertDataToDatabase(binding: PostCreateFragmentBinding) {
+    private  fun insertDataToDatabase(binding: PostCreateFragmentBinding) {
         val textValue = binding.createPostText.getText().toString()
-        if (!textValue.isNullOrEmpty()) {
-            val post = Post(0, binding.createPostText.getText().toString())
+        val userNameValue = binding.userName.getText().toString()
+
+        if (!textValue.isNullOrEmpty() && !userNameValue.isNullOrEmpty()) {
+            val post = Post(0, textValue, userNameValue)
             viewModel.addPost(post)
         }
     }

@@ -6,11 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.faith.database.post.DatabasePost
 import com.example.faith.database.post.PostDatabaseDao
+import com.example.faith.database.user.DatabaseUser
+import com.example.faith.database.user.UserDatabaseDao
 
-@Database(entities = [DatabasePost::class], version = 1, exportSchema = false)
+@Database(entities = [DatabasePost::class, DatabaseUser::class], version = 2, exportSchema = false)
 abstract class FaithDatabase() : RoomDatabase() {
 
     abstract val postDatabaseDao: PostDatabaseDao
+    abstract val userDatabaseDao: UserDatabaseDao
 
     companion object {
         @Volatile

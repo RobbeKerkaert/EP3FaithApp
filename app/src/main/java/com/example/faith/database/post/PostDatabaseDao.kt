@@ -1,10 +1,8 @@
 package com.example.faith.database.post
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
+import com.example.faith.database.user.DatabaseUser
 
 @Dao
 interface PostDatabaseDao {
@@ -32,4 +30,10 @@ interface PostDatabaseDao {
      */
     @Query("SELECT * FROM post_table ORDER BY postId DESC")
     fun getAllPosts(): LiveData<List<DatabasePost>>
+
+    /**
+     * Selects and returns the post with a given id as LiveData
+     */
+    @Query("SELECT * from post_table WHERE postId = :key")
+    fun getPostById(key: Long): LiveData<DatabasePost>
 }

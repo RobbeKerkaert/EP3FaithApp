@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.faith.MainActivity
 import com.example.faith.R
 
 class ProfileEditFragment : Fragment() {
@@ -20,6 +21,9 @@ class ProfileEditFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // For action bar title
+        (activity as MainActivity).supportActionBar?.title = "Edit your profile"
+
         return inflater.inflate(R.layout.profile_edit_fragment, container, false)
     }
 

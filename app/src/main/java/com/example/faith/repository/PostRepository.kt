@@ -34,7 +34,7 @@ class PostRepository(private val database : FaithDatabase) {
     }
 
     suspend fun addPost(post: Post) {
-        val databasePost = DatabasePost(post.postId, post.text)
+        val databasePost = DatabasePost(post.postId, post.text, post.userName)
         database.postDatabaseDao.insert(databasePost)
     }
 }

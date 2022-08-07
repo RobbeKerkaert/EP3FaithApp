@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.faith.MainActivity
 import com.example.faith.R
 import com.example.faith.database.FaithDatabase
 import com.example.faith.databinding.FragmentHomeBinding
@@ -30,43 +31,46 @@ class HomeFragment : Fragment() {
         val binding = DataBindingUtil.inflate<FragmentHomeBinding>(inflater,
             R.layout.fragment_home, container, false)
 
+        // Necessary starter things
         val application = requireNotNull(this.activity).application
         val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
         val viewModelFactory = HomeViewModelFactory(dataSource, application)
 
         setHasOptionsMenu(true)
 
-        // RecyclerView
+        binding.lifecycleOwner = this
+
+        // For action bar title
+        (activity as MainActivity).supportActionBar?.title = "Home"
+
+        // HomeViewModel & RecyclerView
+        homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
+
         var recyclerView = binding.postList
-        val adapter = HomeAdapter(PostListener { })
+        val adapter = HomeAdapter(PostListener {
+                postId -> homeViewModel.onPostClicked(postId)
+        })
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // HomeViewModel
-        binding.lifecycleOwner = this
-
-        homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
         homeViewModel.posts.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
+        })
+        homeViewModel.navigateToPostDetail.observe(viewLifecycleOwner, Observer {post ->
+            post?.let {
+                this.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPostDetailFragment(post))
+                homeViewModel.onPostNavigated()
+            }
         })
         binding.homeViewModel = homeViewModel
 
         // OnClickListeners
-        binding.testAddButton.setOnClickListener {
-            insertDataToDatabase()
-        }
         binding.addPostButton.setOnClickListener { view:View ->
             view.findNavController().navigate(R.id.action_homeFragment_to_postCreateFragment)
         }
 
         return binding.root
-    }
-
-    private fun insertDataToDatabase () {
-        val text = "I AM A TEST"
-
-        val post = Post(0, text)
-        homeViewModel.addPost(post)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

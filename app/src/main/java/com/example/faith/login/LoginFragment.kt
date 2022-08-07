@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.DataBindingUtil.setContentView
+import com.example.faith.MainActivity
 import com.example.faith.databinding.FragmentHomeBinding
 import com.example.faith.login.CredentialsManager
 
@@ -48,6 +49,10 @@ class LoginFragment : Fragment() {
         binding = DataBindingUtil.inflate<FragmentLoginBinding>(inflater,
             R.layout.fragment_login, container, false)
 
+        // For action bar title
+        (activity as MainActivity).supportActionBar?.title = "Log In"
+
+        // Button Listeners
         binding.buttonLogin.setOnClickListener { login() }
         binding.buttonLogout.setOnClickListener { logout() }
 
