@@ -48,12 +48,18 @@ class HomeFragment : Fragment() {
 
         var recyclerView = binding.postList
         val adapter = HomeAdapter(PostListener {
-                postId -> homeViewModel.onPostClicked(postId)
+                postId, canDelete ->
+            if (canDelete) {
+                homeViewModel.onPostDeleteClick(postId)
+            } else {
+                homeViewModel.onPostClicked(postId)
+            }
         })
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        // For clicks on recyclerview
         homeViewModel.posts.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
         })
@@ -63,6 +69,13 @@ class HomeFragment : Fragment() {
                 homeViewModel.onPostNavigated()
             }
         })
+        homeViewModel.canDeletePost.observe(viewLifecycleOwner, Observer {post ->
+            post?.let {
+                homeViewModel.deletePost(post)
+                homeViewModel.onPostDeleted()
+            }
+        })
+
         binding.homeViewModel = homeViewModel
 
         // OnClickListeners

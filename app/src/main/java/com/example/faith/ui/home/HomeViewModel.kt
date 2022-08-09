@@ -37,11 +37,28 @@ class HomeViewModel(val database: PostDatabaseDao, application: Application): An
         _navigateToPostDetail.value = null
     }
 
+    // For deleting
+    private val _canDeletePost = MutableLiveData<Long?>()
+    val canDeletePost
+        get() = _canDeletePost
+
+    fun onPostDeleteClick(postId: Long) {
+        _canDeletePost.value = postId
+    }
+    fun onPostDeleted() {
+        _canDeletePost.value = null
+    }
 
     // Functions
     fun addPost(post: Post) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.addPost(post)
+        }
+    }
+
+    fun deletePost(postId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deletePost(postId)
         }
     }
 

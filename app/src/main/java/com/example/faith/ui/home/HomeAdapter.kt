@@ -50,6 +50,7 @@ class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
 
 }
 
-class PostListener(val clickListener: (kunstwerkId: Long) -> Unit) {
-    fun onClick(post: Post) = clickListener(post.postId)
+class PostListener(val clickListener: (postId: Long, canDelete: Boolean) -> Unit) {
+    fun onClick(post: Post) = clickListener(post.postId, false)
+    fun onClickDelete(post: Post) = clickListener(post.postId, true)
 }

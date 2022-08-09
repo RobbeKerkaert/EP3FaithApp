@@ -19,6 +19,18 @@ interface PostDatabaseDao {
     suspend fun update(post: DatabasePost)
 
     /**
+     * Deletes post with postId from table
+     */
+    @Delete
+    suspend fun delete(post: DatabasePost)
+
+    /**
+     * Clears all posts from table
+     */
+    @Query("DELETE FROM post_table")
+    suspend fun clear()
+
+    /**
      * Gets a specific post with the matching key.
      */
     @Query("SELECT * from post_table WHERE postId = :key")

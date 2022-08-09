@@ -56,5 +56,18 @@
             app:layout_constraintTop_toBottomOf="@+id/postText"
             app:layout_constraintVertical_bias="1.0" />
 
+        <Button
+            android:id="@+id/deletePostButton"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="@string/cross"
+            android:onClick="@{() -> clickListener.onClickDelete(post)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.948"
+            app:layout_constraintStart_toEndOf="@+id/viewReactionsButton"
+            app:layout_constraintTop_toBottomOf="@+id/postText"
+            app:layout_constraintVertical_bias="1.0" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

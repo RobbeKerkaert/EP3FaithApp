@@ -37,4 +37,17 @@ class PostRepository(private val database : FaithDatabase) {
         val databasePost = DatabasePost(post.postId, post.text, post.userName)
         database.postDatabaseDao.insert(databasePost)
     }
+
+    suspend fun deletePost(postId: Long) {
+        val post = getPost(postId)
+        if (post != null) {
+            database.postDatabaseDao.delete(DatabasePost(post.postId, post.text, post.userName))
+        }
+    }
+
+    suspend fun getPost(postId: Long): Post? {
+        val databasePost = database.postDatabaseDao.get(postId)
+        val post = databasePost?.let { Post(it.postId, databasePost.text, databasePost.userName) }
+        return post
+    }
 }
