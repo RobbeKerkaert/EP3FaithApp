@@ -5,12 +5,12 @@
 
     <data>
         <variable
-            name="post"
-            type="com.example.faith.domain.Post" />
+            name="reaction"
+            type="com.example.faith.domain.Reaction" />
 
         <variable
             name="clickListener"
-            type="com.example.faith.ui.home.PostListener" />
+            type="com.example.faith.ui.post_detail.ReactionListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="27dp"
             android:layout_marginBottom="12dp"
-            android:text="@{post.userName}"
+            android:text="@{reaction.userName}"
             app:layout_constraintBottom_toTopOf="@+id/postText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.088"
@@ -36,49 +36,20 @@
             android:id="@+id/postText"
             android:layout_width="326dp"
             android:layout_height="wrap_content"
-            android:text="@{post.text}"
+            android:text="@{reaction.text}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/updatePostButton"
-            android:layout_width="68dp"
-            android:layout_height="wrap_content"
-            android:text="@string/edit_post"
-            android:onClick="@{() -> clickListener.onClickUpdate(post)}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/viewReactionsButton"
-            app:layout_constraintHorizontal_bias="0.1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <Button
-            android:id="@+id/viewReactionsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:onClick="@{() -> clickListener.onClick(post)}"
-            android:text="@string/reactions"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/postText"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <Button
             android:id="@+id/deletePostButton"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:text="@string/cross"
-            android:onClick="@{() -> clickListener.onClickDelete(post)}"
+            android:onClick="@{() -> clickListener.onClickDelete(reaction)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.948"
-            app:layout_constraintStart_toEndOf="@+id/viewReactionsButton"
             app:layout_constraintTop_toBottomOf="@+id/postText"
             app:layout_constraintVertical_bias="1.0" />
 

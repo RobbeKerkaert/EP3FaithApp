@@ -3,7 +3,7 @@ package com.example.faith.domain
 data class Post(
     var postId: Long = 0L,
     var text: String = "",
-    var userName: String = ""
+    var userName: String = "",
 )
 
 data class User(
@@ -13,5 +13,6 @@ data class User(
 data class Reaction(
     var reactionId: Long = 0L,
     var postId: Long = 0L,
-    var text: String = ""
+    var text: String = "",
+    var userName: String = ""
 )

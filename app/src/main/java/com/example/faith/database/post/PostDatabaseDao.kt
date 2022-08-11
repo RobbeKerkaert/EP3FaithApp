@@ -48,4 +48,8 @@ interface PostDatabaseDao {
      */
     @Query("SELECT * from post_table WHERE postId = :key")
     fun getPostById(key: Long): LiveData<DatabasePost>
+
+    @Transaction
+    @Query("SELECT * FROM post_table")
+    fun getPostsWithReactions(): List<DatabasePostReactions>
 }

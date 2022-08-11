@@ -12,10 +12,6 @@ import com.example.faith.domain.Post
 
 class PostRepository(private val database : FaithDatabase) {
     val posts = MediatorLiveData<List<Post>>()
-    val filter = MutableLiveData<String>(null)
-    val posts2 = Transformations.map(database.postDatabaseDao.getAllPosts()) {
-        it.asDomainModel()
-    }
 
     private var changeableLiveData = Transformations.map(database.postDatabaseDao.getAllPosts()) {
         it.asDomainModel()
@@ -29,13 +25,15 @@ class PostRepository(private val database : FaithDatabase) {
         }
     }
 
-    fun addFilter(filter: String?) {
-        this.filter.value = filter
+    suspend fun addPost(post: Post) {
+        database.postDatabaseDao.insert(DatabasePost(post.postId, post.text, post.userName))
     }
 
-    suspend fun addPost(post: Post) {
-        val databasePost = DatabasePost(post.postId, post.text, post.userName)
-        database.postDatabaseDao.insert(databasePost)
+    suspend fun updatePost(postId: Long, newPost: Post) {
+        val oldPost = getPost(postId)
+        if (oldPost != null) {
+            database.postDatabaseDao.update(DatabasePost(oldPost.postId, newPost.text, oldPost.userName))
+        }
     }
 
     suspend fun deletePost(postId: Long) {
@@ -47,7 +45,7 @@ class PostRepository(private val database : FaithDatabase) {
 
     suspend fun getPost(postId: Long): Post? {
         val databasePost = database.postDatabaseDao.get(postId)
-        val post = databasePost?.let { Post(it.postId, databasePost.text, databasePost.userName) }
+        val post = databasePost?.let { Post(it.postId, it.text, it.userName) }
         return post
     }
 }

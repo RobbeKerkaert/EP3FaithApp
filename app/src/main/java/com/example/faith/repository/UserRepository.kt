@@ -10,10 +10,6 @@ import com.example.faith.domain.User
 
 class UserRepository(private val database : FaithDatabase) {
     val users = MediatorLiveData<List<User>>()
-    val filter = MutableLiveData<String>(null)
-    val users2 = Transformations.map(database.userDatabaseDao.getAllUsers()) {
-        it.asDomainModel()
-    }
 
     private var changeableLiveData = Transformations.map(database.userDatabaseDao.getAllUsers()) {
         it.asDomainModel()
@@ -25,10 +21,6 @@ class UserRepository(private val database : FaithDatabase) {
         ) {
             users.setValue(it)
         }
-    }
-
-    fun addFilter(filter: String?) {
-        this.filter.value = filter
     }
 
     suspend fun addPost(user: User) {

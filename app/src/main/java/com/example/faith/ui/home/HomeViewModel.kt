@@ -22,10 +22,9 @@ class HomeViewModel(val database: PostDatabaseDao, application: Application): An
     // For database
     val db = FaithDatabase.getInstance(application.applicationContext)
     private val repository = PostRepository(db)
-    val posts = repository.posts2
+    val posts = repository.posts
 
     // For navigation
-
     private val _navigateToPostDetail = MutableLiveData<Long?>()
     val navigateToPostDetail
         get() = _navigateToPostDetail
@@ -49,13 +48,19 @@ class HomeViewModel(val database: PostDatabaseDao, application: Application): An
         _canDeletePost.value = null
     }
 
-    // Functions
-    fun addPost(post: Post) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.addPost(post)
-        }
+    // For editing
+    private val _canEditPost = MutableLiveData<Long?>()
+    val canEditPost
+        get() = _canEditPost
+
+    fun onPostUpdateClick(postId: Long) {
+        _canEditPost.value = postId
+    }
+    fun onPostUpdated() {
+        _canEditPost.value = null
     }
 
+    // Functions
     fun deletePost(postId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deletePost(postId)

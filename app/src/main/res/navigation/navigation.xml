@@ -22,6 +22,10 @@
         <action
             android:id="@+id/action_homeFragment_to_postDetailFragment"
             app:destination="@id/postDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_postEditFragment"
+            app:destination="@id/postEditFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -67,5 +71,18 @@
             android:name="postId"
             app:argType="long"
             android:defaultValue="0L" />
+    </fragment>
+    <fragment
+        android:id="@+id/postEditFragment"
+        android:name="com.example.faith.ui.post_edit.PostEditFragment"
+        android:label="post_edit_fragment"
+        tools:layout="@layout/post_edit_fragment" >
+        <argument
+            android:name="postId"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <action
+            android:id="@+id/action_postEditFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

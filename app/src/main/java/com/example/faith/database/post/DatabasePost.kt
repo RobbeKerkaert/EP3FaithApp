@@ -1,6 +1,7 @@
 package com.example.faith.database.post
 
 import androidx.room.*
+import com.example.faith.database.reaction.DatabaseReaction
 import com.example.faith.database.user.DatabaseUser
 import com.example.faith.domain.Post
 
@@ -14,7 +15,6 @@ data class DatabasePost(
 
     @ColumnInfo(name = "userName")
     var userName: String = ""
-
 )
 
 fun List<DatabasePost>.asDomainModel() : List<Post> {

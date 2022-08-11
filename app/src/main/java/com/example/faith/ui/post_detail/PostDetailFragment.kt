@@ -7,11 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.faith.MainActivity
 import com.example.faith.R
 import com.example.faith.database.FaithDatabase
 import com.example.faith.databinding.PostDetailFragmentBinding
+import com.example.faith.domain.Reaction
 
 class PostDetailFragment : Fragment() {
 
@@ -26,16 +30,47 @@ class PostDetailFragment : Fragment() {
         // For action bar title
         (activity as MainActivity).supportActionBar?.title = "Post Reactions"
 
+        // Necessary starter things
         val binding: PostDetailFragmentBinding =
             DataBindingUtil.inflate(inflater, R.layout.post_detail_fragment, container, false)
 
         val arguments = PostDetailFragmentArgs.fromBundle(requireArguments())
 
         val application = requireNotNull(this.activity).application
-        val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
+        val postDataSource = FaithDatabase.getInstance(application).postDatabaseDao
+        val reactionDataSource = FaithDatabase.getInstance(application).reactionDatabaseDao
 
-        val viewModelFactory = PostDetailViewModelFactory(arguments.postId, dataSource)
-        val viewModel = ViewModelProvider(this, viewModelFactory).get(PostDetailViewModel::class.java)
+        val viewModelFactory = PostDetailViewModelFactory(arguments.postId, postDataSource, reactionDataSource, application)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(PostDetailViewModel::class.java)
+
+        val recyclerView = binding.reactionList
+
+        val adapter = PostDetailAdapter(ReactionListener {
+            reactionId, canDelete -> viewModel.onReactionDeleteClick(reactionId)
+        })
+
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // OnClickListeners
+        binding.addReactionButton.setOnClickListener {
+            if (!binding.reactionText.getText().isNullOrEmpty()) {
+                var reaction = Reaction(0, 0, binding.reactionText.getText().toString(), "")
+                viewModel.addReaction(reaction)
+                binding.reactionText.setText("")
+            }
+        }
+
+        viewModel.reactions.observe(viewLifecycleOwner, Observer {
+            adapter.submitList(it)
+        })
+
+        viewModel.canDeleteReaction.observe(viewLifecycleOwner, Observer {reaction ->
+            reaction?.let {
+                viewModel.deleteReaction(reaction)
+                viewModel.onReactionDeleted()
+            }
+        })
 
         binding.postDetailViewModel = viewModel
         binding.lifecycleOwner = this
