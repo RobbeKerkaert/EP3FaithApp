@@ -28,6 +28,12 @@ class ReactionRepository(private val database : FaithDatabase, private val postK
         database.reactionDatabaseDao.insert(DatabaseReaction(reaction.reactionId, reaction.postId, reaction.text, reaction.userName))
     }
 
+    suspend fun updateReaction(reactionId: Long, newReaction: Reaction) {
+        val oldReaction = getReaction(reactionId)
+        if (oldReaction != null) {
+            database.reactionDatabaseDao.update(DatabaseReaction(oldReaction.reactionId, oldReaction.postId, newReaction.text, oldReaction.userName))
+        }
+    }
 
     suspend fun deleteReaction(reactionId: Long) {
         val reaction = getReaction(reactionId)

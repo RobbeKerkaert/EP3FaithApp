@@ -13,6 +13,12 @@ interface ReactionDatabaseDao {
     suspend fun insert(reaction: DatabaseReaction)
 
     /**
+     * Updates a reaction with new info, after an edit.
+     */
+    @Update
+    suspend fun update(reaction: DatabaseReaction)
+
+    /**
      * Deletes reaction with reactionId from table
      */
     @Delete

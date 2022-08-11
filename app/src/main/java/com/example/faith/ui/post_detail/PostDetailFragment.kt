@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.faith.MainActivity
@@ -16,6 +17,7 @@ import com.example.faith.R
 import com.example.faith.database.FaithDatabase
 import com.example.faith.databinding.PostDetailFragmentBinding
 import com.example.faith.domain.Reaction
+import com.example.faith.ui.home.HomeFragmentDirections
 
 class PostDetailFragment : Fragment() {
 
@@ -46,7 +48,12 @@ class PostDetailFragment : Fragment() {
         val recyclerView = binding.reactionList
 
         val adapter = PostDetailAdapter(ReactionListener {
-            reactionId, canDelete -> viewModel.onReactionDeleteClick(reactionId)
+            reactionId, operation ->
+            if (operation == 1) {
+                viewModel.onReactionUpdateClick(reactionId)
+            } else {
+                viewModel.onReactionDeleteClick(reactionId)
+            }
         })
 
         recyclerView.adapter = adapter
@@ -65,6 +72,13 @@ class PostDetailFragment : Fragment() {
             adapter.submitList(it)
         })
 
+        viewModel.canEditReaction.observe(viewLifecycleOwner, Observer {reaction ->
+            reaction?.let {
+                this.findNavController().navigate(PostDetailFragmentDirections
+                    .actionPostDetailFragmentToReactionEditFragment(arguments.postId, reaction))
+                viewModel.onReactionUpdated()
+            }
+        })
         viewModel.canDeleteReaction.observe(viewLifecycleOwner, Observer {reaction ->
             reaction?.let {
                 viewModel.deleteReaction(reaction)

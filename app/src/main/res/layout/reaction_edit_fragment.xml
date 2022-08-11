@@ -2,22 +2,20 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
     <data>
         <variable
-            name="postEditViewModel"
-            type="com.example.faith.ui.post_edit.PostEditViewModel"/>
+            name="reactionEditViewModel"
+            type="com.example.faith.ui.reaction_edit.ReactionEditViewModel"/>
     </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8sp"
         android:background="@drawable/post_border"
-        tools:context=".ui.post_edit.PostEditFragment">
+        tools:context=".ui.reaction_edit.ReactionEditFragment">
 
         <EditText
-            android:id="@+id/editPostText"
+            android:id="@+id/editReactionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -38,6 +36,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editPostText" />
+            app:layout_constraintTop_toBottomOf="@+id/editReactionText" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

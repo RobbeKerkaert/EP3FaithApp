@@ -44,6 +44,18 @@ class PostDetailViewModel(private val postKey: Long = 0L, postDataSource: PostDa
         _navigateToHome.value = true
     }
 
+    // For editing
+    private val _canEditReaction = MutableLiveData<Long?>()
+    val canEditReaction
+        get() = _canEditReaction
+
+    fun onReactionUpdateClick(reactionId: Long) {
+        _canEditReaction.value = reactionId
+    }
+    fun onReactionUpdated() {
+        _canEditReaction.value = null
+    }
+
     // For deleting
     private val _canDeleteReaction = MutableLiveData<Long?>()
     val canDeleteReaction

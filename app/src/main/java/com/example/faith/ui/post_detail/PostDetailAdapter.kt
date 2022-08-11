@@ -50,7 +50,7 @@ class ReactionDiffCallback : DiffUtil.ItemCallback<Reaction>() {
 
 }
 
-class ReactionListener(val clickListener: (reactionId: Long, canDelete: Boolean) -> Unit) {
-    fun onClick(reaction: Reaction) = clickListener(reaction.reactionId, false)
-    fun onClickDelete(reaction: Reaction) = clickListener(reaction.reactionId, true)
+class ReactionListener(val clickListener: (reactionId: Long, operation: Int) -> Unit) {
+    fun onClickUpdate(reaction: Reaction) = clickListener(reaction.reactionId, 1)
+    fun onClickDelete(reaction: Reaction) = clickListener(reaction.reactionId, 2)
 }
