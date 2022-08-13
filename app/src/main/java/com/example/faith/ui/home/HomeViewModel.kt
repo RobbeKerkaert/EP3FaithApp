@@ -14,11 +14,6 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(val database: PostDatabaseDao, application: Application): AndroidViewModel(application) {
 
-    // For action bar title
-    private val _title = MutableLiveData<String>()
-    val title: LiveData<String>
-        get() = _title
-
     // For database
     val db = FaithDatabase.getInstance(application.applicationContext)
     private val repository = PostRepository(db)
@@ -66,6 +61,4 @@ class HomeViewModel(val database: PostDatabaseDao, application: Application): An
             repository.deletePost(postId)
         }
     }
-
-    fun updateActionBarTitle(title: String) = _title.postValue(title)
 }

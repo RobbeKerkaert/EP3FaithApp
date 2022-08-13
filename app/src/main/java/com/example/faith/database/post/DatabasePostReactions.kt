@@ -6,7 +6,7 @@ import com.example.faith.database.reaction.DatabaseReaction
 import com.example.faith.domain.Post
 
 data class DatabasePostReactions(
-    @Embedded var post: Post,
+    @Embedded var post: DatabasePost,
     @Relation(
         parentColumn = "postId",
         entityColumn = "postId"

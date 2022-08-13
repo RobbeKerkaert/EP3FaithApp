@@ -55,6 +55,12 @@ interface PostDatabaseDao {
     @Query("SELECT * from post_table WHERE userId = :key")
     fun getPostsByUserId(key: Long): LiveData<List<DatabasePost>>
 
+//    /**
+//     * Selects and returns all posts with a given userId as LiveData
+//     */
+//    @Query("SELECT * from post_table WHERE userId = :key AND isFavorite = true")
+//    fun getFavoritePostsByUserId(key: Long): LiveData<List<DatabasePost>>
+
     @Transaction
     @Query("SELECT * FROM post_table")
     fun getPostsWithReactions(): List<DatabasePostReactions>

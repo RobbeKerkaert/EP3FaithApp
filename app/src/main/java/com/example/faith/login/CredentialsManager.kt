@@ -26,15 +26,15 @@ object CredentialsManager {
         .setKeySize(DEFAULT_AES_GCM_MASTER_KEY_SIZE)
         .build()
 
-    var currentUserId: Long = 0L
+    var currentUserDetails: MutableMap<String, Any> = mutableMapOf<String, Any>()
 
     // Functions for metadata
-    fun setUserId(userId: Long) {
-        currentUserId = userId
+    fun setUserDetails(userDetails: MutableMap<String, Any>) {
+        currentUserDetails = userDetails
     }
 
-    fun getUserId(): Long {
-        return currentUserId
+    fun getUserDetails(): MutableMap<String, Any> {
+        return currentUserDetails
     }
 
     // Functions for saving and getting the access token
@@ -47,11 +47,6 @@ object CredentialsManager {
 
     fun getAccessToken(context: Context): String? {
         val preferences = createPreferences(context, buildMasterKey(context))
-//        var token = preferences.getString(ACCESS_TOKEN, null)
-//        var jwt = token?.let { JWT(it) }
-//        jwt?.claims?.forEach { entry ->
-//            println("${entry.key} : ${entry.value.asString()}")
-//        }
         return preferences.getString(ACCESS_TOKEN, null)
     }
 

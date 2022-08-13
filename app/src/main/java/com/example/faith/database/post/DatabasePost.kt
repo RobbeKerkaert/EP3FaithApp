@@ -18,6 +18,9 @@ data class DatabasePost(
 
     @ColumnInfo(name = "userId")
     var userId: Long = 0L,
+
+    @ColumnInfo(name = "favorited")
+    var isFavorite: Boolean = false
 )
 
 fun List<DatabasePost>.asDomainModel() : List<Post> {
@@ -26,7 +29,8 @@ fun List<DatabasePost>.asDomainModel() : List<Post> {
             postId = it.postId,
             text = it.text,
             userName = it.userName,
-            userId = it.userId
+            userId = it.userId,
+            isFavorite = it.isFavorite
         )
     }
 }

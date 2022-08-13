@@ -14,6 +14,7 @@ import com.example.faith.database.FaithDatabase
 import com.example.faith.databinding.FragmentHomeBinding
 import com.example.faith.databinding.PostCreateFragmentBinding
 import com.example.faith.domain.Post
+import com.example.faith.login.CredentialsManager
 import com.example.faith.ui.home.HomeViewModelFactory
 
 class PostCreateFragment : Fragment() {
@@ -49,10 +50,10 @@ class PostCreateFragment : Fragment() {
 
     private  fun insertDataToDatabase(binding: PostCreateFragmentBinding) {
         val textValue = binding.createPostText.getText().toString()
-        val userNameValue = binding.userName.getText().toString()
+        val currentUserDetails = CredentialsManager.getUserDetails()
 
-        if (!textValue.isNullOrEmpty() && !userNameValue.isNullOrEmpty()) {
-            val post = Post(0, textValue, userNameValue)
+        if (!textValue.isNullOrEmpty()) {
+            val post = Post(0, textValue, currentUserDetails["userName"] as String, currentUserDetails["userId"] as Long)
             viewModel.addPost(post)
         }
     }

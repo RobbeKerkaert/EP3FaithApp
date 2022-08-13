@@ -17,7 +17,6 @@ class PostDetailViewModel(private val postKey: Long = 0L, postDataSource: PostDa
     private val repository = ReactionRepository(db, postKey)
 
     private val dbPosts = postDataSource
-    private val dbReactions = reactionDataSource
     private val databasePost = MediatorLiveData<DatabasePost>()
 
     val reactions = repository.reactions
@@ -26,19 +25,6 @@ class PostDetailViewModel(private val postKey: Long = 0L, postDataSource: PostDa
 
     init {
         databasePost.addSource(dbPosts.getPostByPostId(postKey), databasePost::setValue)
-    }
-
-    private val _navigateToHome = MutableLiveData<Boolean?>()
-
-    val navigateToHome: LiveData<Boolean?>
-        get() = _navigateToHome
-
-    fun doneNavigating() {
-        _navigateToHome.value = null
-    }
-
-    fun onClose() {
-        _navigateToHome.value = true
     }
 
     // For editing

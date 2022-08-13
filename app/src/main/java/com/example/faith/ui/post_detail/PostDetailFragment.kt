@@ -17,6 +17,7 @@ import com.example.faith.R
 import com.example.faith.database.FaithDatabase
 import com.example.faith.databinding.PostDetailFragmentBinding
 import com.example.faith.domain.Reaction
+import com.example.faith.login.CredentialsManager
 import com.example.faith.ui.home.HomeFragmentDirections
 
 class PostDetailFragment : Fragment() {
@@ -61,8 +62,10 @@ class PostDetailFragment : Fragment() {
 
         // OnClickListeners
         binding.addReactionButton.setOnClickListener {
-            if (!binding.reactionText.getText().isNullOrEmpty()) {
-                var reaction = Reaction(0, 0, 0, binding.reactionText.getText().toString())
+            var textValue = binding.reactionText.getText()
+            if (!textValue.isNullOrEmpty()) {
+                var currentUserDetails = CredentialsManager.getUserDetails()
+                var reaction = Reaction(0, 0, currentUserDetails["userId"] as Long, textValue.toString(), currentUserDetails["userName"] as String)
                 viewModel.addReaction(reaction)
                 binding.reactionText.setText("")
             }

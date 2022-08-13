@@ -40,7 +40,7 @@ class LoginFragment : Fragment() {
     private var cachedCredentials: Credentials? = null
     private var cachedUserProfile: UserProfile? = null
 
-    private var currentUserId: Long = 0L
+    var currentUserDetails: MutableMap<String, Any> = mutableMapOf<String, Any>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,8 +133,9 @@ class LoginFragment : Fragment() {
                     cachedCredentials = null
                     cachedUserProfile = null
                     updateUI()
-                    currentUserId = 0
-                    CredentialsManager.setUserId(currentUserId)
+                    currentUserDetails["userId"] = 0
+                    currentUserDetails["userName"] = ""
+                    CredentialsManager.setUserDetails(currentUserDetails)
                 }
 
             })
@@ -163,9 +164,11 @@ class LoginFragment : Fragment() {
                     updateUI()
 
                     val userId = userProfile.getUserMetadata()["userId"] as String?
+                    val userName = userProfile.getUserMetadata()["userName"] as String?
                     if (userId != null) {
-                        currentUserId = userId.toLong()
-                        CredentialsManager.setUserId(currentUserId)
+                        currentUserDetails["userId"] = userId.toLong()
+                        currentUserDetails["userName"] = userName.toString()
+                        CredentialsManager.setUserDetails(currentUserDetails)
                     }
                 }
 
@@ -223,7 +226,6 @@ class LoginFragment : Fragment() {
                     cachedUserProfile = profile
                     updateUI()
                     getUserMetadata()
-                    CredentialsManager.setUserId(currentUserId)
                 }
 
             })

@@ -12,7 +12,7 @@ import com.example.faith.database.user.DatabaseUser
 import com.example.faith.database.user.UserDatabaseDao
 import java.io.File
 
-@Database(entities = [DatabaseUser::class, DatabasePost::class, DatabaseReaction::class], version = 9, exportSchema = false)
+@Database(entities = [DatabaseUser::class, DatabasePost::class, DatabaseReaction::class], version = 10, exportSchema = false)
 abstract class FaithDatabase() : RoomDatabase() {
 
     abstract val reactionDatabaseDao: ReactionDatabaseDao
