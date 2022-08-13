@@ -5,11 +5,8 @@ import androidx.lifecycle.*
 import com.example.faith.database.FaithDatabase
 import com.example.faith.database.post.DatabasePost
 import com.example.faith.database.post.PostDatabaseDao
-import com.example.faith.database.reaction.DatabaseReaction
 import com.example.faith.database.reaction.ReactionDatabaseDao
-import com.example.faith.domain.Post
 import com.example.faith.domain.Reaction
-import com.example.faith.repository.PostRepository
 import com.example.faith.repository.ReactionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +25,7 @@ class PostDetailViewModel(private val postKey: Long = 0L, postDataSource: PostDa
     fun getPost() = databasePost
 
     init {
-        databasePost.addSource(dbPosts.getPostById(postKey), databasePost::setValue)
+        databasePost.addSource(dbPosts.getPostByPostId(postKey), databasePost::setValue)
     }
 
     private val _navigateToHome = MutableLiveData<Boolean?>()

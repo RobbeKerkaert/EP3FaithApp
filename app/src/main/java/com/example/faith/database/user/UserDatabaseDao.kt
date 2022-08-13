@@ -23,8 +23,14 @@ interface UserDatabaseDao {
     /**
      * Gets a specific user with the matching key.
      */
-    @Query("SELECT * from user_table WHERE userName = :key")
-    suspend fun get(key: String): DatabaseUser?
+    @Query("SELECT * from user_table WHERE userId = :key")
+    suspend fun get(key: Long): DatabaseUser?
+
+    /**
+     * Gets a specific user with the matching email.
+     */
+    @Query("SELECT * from user_table WHERE email = :email")
+    suspend fun getUserByEmail(email: String): DatabaseUser
 
     /**
      * Selects and returns all rows in the table.

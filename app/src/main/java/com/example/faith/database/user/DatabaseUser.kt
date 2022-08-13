@@ -11,13 +11,19 @@ import com.example.faith.domain.User
 data class DatabaseUser(
 
     @PrimaryKey(autoGenerate = false)
+    var userId: Long = 0L,
+    @ColumnInfo(name = "userName")
     var userName: String = "",
+    @ColumnInfo(name = "email")
+    var email: String = ""
 )
 
 fun List<DatabaseUser>.asDomainModel() : List<User> {
     return map {
         User(
-            userName = it.userName
+            userId = it.userId,
+            userName = it.userName,
+            email = it.email
         )
     }
 }

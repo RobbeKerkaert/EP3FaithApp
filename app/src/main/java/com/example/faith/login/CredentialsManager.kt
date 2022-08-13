@@ -6,7 +6,11 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import com.auth0.android.result.Credentials
 import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import androidx.security.crypto.MasterKey.*
+import com.auth0.android.jwt.JWT
+import com.auth0.android.result.UserProfile
+import com.example.faith.domain.User
 
 object CredentialsManager {
 
@@ -22,38 +26,49 @@ object CredentialsManager {
         .setKeySize(DEFAULT_AES_GCM_MASTER_KEY_SIZE)
         .build()
 
+    var currentUserId: Long = 0L
+
+    // Functions for metadata
+    fun setUserId(userId: Long) {
+        currentUserId = userId
+    }
+
+    fun getUserId(): Long {
+        return currentUserId
+    }
+
+    // Functions for saving and getting the access token
     fun saveCredentials(context: Context, credentials: Credentials) {
-
-        val masterKeyAlias = Builder(context, DEFAULT_MASTER_KEY_ALIAS)
-            .setKeyGenParameterSpec(keyGenParameterSpec)
-            .build()
-
-        val preferences = EncryptedSharedPreferences.create(
-            context,
-            "secret_shared_prefs",
-            masterKeyAlias,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+        val preferences = createPreferences(context, buildMasterKey(context))
 
         editor = preferences.edit()
         editor.putString(ACCESS_TOKEN, credentials.accessToken).apply()
     }
 
     fun getAccessToken(context: Context): String? {
+        val preferences = createPreferences(context, buildMasterKey(context))
+//        var token = preferences.getString(ACCESS_TOKEN, null)
+//        var jwt = token?.let { JWT(it) }
+//        jwt?.claims?.forEach { entry ->
+//            println("${entry.key} : ${entry.value.asString()}")
+//        }
+        return preferences.getString(ACCESS_TOKEN, null)
+    }
 
-        val masterKeyAlias = Builder(context, DEFAULT_MASTER_KEY_ALIAS)
+    // Private functions for use within the manager
+    private fun buildMasterKey(context: Context): MasterKey {
+        return Builder(context, DEFAULT_MASTER_KEY_ALIAS)
             .setKeyGenParameterSpec(keyGenParameterSpec)
             .build()
+    }
 
-        val preferences = EncryptedSharedPreferences.create(
+    private fun createPreferences(context: Context, masterKeyAlias: MasterKey): SharedPreferences {
+        return EncryptedSharedPreferences.create(
             context,
             "secret_shared_prefs",
             masterKeyAlias,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
-
-        return preferences.getString(ACCESS_TOKEN, null)
     }
 }

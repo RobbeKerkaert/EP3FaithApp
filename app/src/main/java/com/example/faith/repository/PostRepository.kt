@@ -9,11 +9,13 @@ import com.example.faith.database.FaithDatabase
 import com.example.faith.database.post.DatabasePost
 import com.example.faith.database.post.asDomainModel
 import com.example.faith.domain.Post
+import com.example.faith.login.CredentialsManager
 
 class PostRepository(private val database : FaithDatabase) {
     val posts = MediatorLiveData<List<Post>>()
 
-    private var changeableLiveData = Transformations.map(database.postDatabaseDao.getAllPosts()) {
+    private var changeableLiveData = Transformations.map(database.postDatabaseDao
+        .getPostsByUserId(CredentialsManager.getUserId())) {
         it.asDomainModel()
     }
 

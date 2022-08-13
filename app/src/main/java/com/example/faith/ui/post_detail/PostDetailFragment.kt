@@ -62,7 +62,7 @@ class PostDetailFragment : Fragment() {
         // OnClickListeners
         binding.addReactionButton.setOnClickListener {
             if (!binding.reactionText.getText().isNullOrEmpty()) {
-                var reaction = Reaction(0, 0, binding.reactionText.getText().toString(), "")
+                var reaction = Reaction(0, 0, 0, binding.reactionText.getText().toString())
                 viewModel.addReaction(reaction)
                 binding.reactionText.setText("")
             }

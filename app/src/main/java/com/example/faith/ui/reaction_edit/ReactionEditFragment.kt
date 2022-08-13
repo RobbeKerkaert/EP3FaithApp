@@ -56,7 +56,7 @@ class ReactionEditFragment : Fragment() {
         val textValue = binding.editReactionText.getText().toString()
 
         if (!textValue.isNullOrEmpty()) {
-            val reaction = Reaction(0, 0, textValue, "")
+            val reaction = Reaction(0, 0, 0, textValue)
             viewModel.editReaction(reaction)
         }
     }

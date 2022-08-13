@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">FAITH</string>
     <string name="profile">Profile</string>
+    <string name="home">Home</string>
 
     <!-- Posts -->
     <string name="create_post">Create Post</string>

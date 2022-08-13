@@ -8,8 +8,8 @@ data class DatabaseUserPosts(
     @Embedded
     var user: DatabaseUser,
     @Relation(
-        parentColumn = "userName",
-        entityColumn = "userName"
+        parentColumn = "userId",
+        entityColumn = "userId"
     )
     var posts: List<DatabasePost>
 )

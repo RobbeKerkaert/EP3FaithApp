@@ -14,11 +14,11 @@ data class DatabaseReaction(
     @ColumnInfo(name = "postId")
     var postId: Long = 0L,
 
-    @ColumnInfo(name = "text")
-    var text: String = "",
+    @ColumnInfo(name = "userId")
+    var userId: Long = 0L,
 
-    @ColumnInfo(name = "userName")
-    var userName: String = ""
+    @ColumnInfo(name = "text")
+    var text: String = ""
 )
 
 fun List<DatabaseReaction>.asDomainModel() : List<Reaction> {
@@ -26,8 +26,8 @@ fun List<DatabaseReaction>.asDomainModel() : List<Reaction> {
         Reaction(
             reactionId = it.reactionId,
             postId = it.postId,
-            text = it.text,
-            userName = it.userName
+            userId = it.userId,
+            text = it.text
         )
     }
 }

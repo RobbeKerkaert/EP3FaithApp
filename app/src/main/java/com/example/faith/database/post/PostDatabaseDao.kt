@@ -37,6 +37,12 @@ interface PostDatabaseDao {
     suspend fun get(key: Long): DatabasePost?
 
     /**
+     * Selects and returns the post with a given id as LiveData
+     */
+    @Query("SELECT * from post_table WHERE postId = :key")
+    fun getPostByPostId(key: Long): LiveData<DatabasePost>
+
+    /**
      * Selects and returns all rows in the table.
      * sorted by id in descending order. Should probably get something else for this.
      */
@@ -44,10 +50,10 @@ interface PostDatabaseDao {
     fun getAllPosts(): LiveData<List<DatabasePost>>
 
     /**
-     * Selects and returns the post with a given id as LiveData
+     * Selects and returns all posts with a given userId as LiveData
      */
-    @Query("SELECT * from post_table WHERE postId = :key")
-    fun getPostById(key: Long): LiveData<DatabasePost>
+    @Query("SELECT * from post_table WHERE userId = :key")
+    fun getPostsByUserId(key: Long): LiveData<List<DatabasePost>>
 
     @Transaction
     @Query("SELECT * FROM post_table")

@@ -16,6 +16,7 @@ import com.example.faith.R
 import com.example.faith.database.FaithDatabase
 import com.example.faith.databinding.FragmentHomeBinding
 import com.example.faith.domain.Post
+import com.example.faith.login.CredentialsManager
 
 class HomeFragment : Fragment() {
 

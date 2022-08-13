@@ -14,7 +14,10 @@ data class DatabasePost(
     var text: String = "",
 
     @ColumnInfo(name = "userName")
-    var userName: String = ""
+    var userName: String = "",
+
+    @ColumnInfo(name = "userId")
+    var userId: Long = 0L,
 )
 
 fun List<DatabasePost>.asDomainModel() : List<Post> {
@@ -22,7 +25,8 @@ fun List<DatabasePost>.asDomainModel() : List<Post> {
         Post(
             postId = it.postId,
             text = it.text,
-            userName = it.userName
+            userName = it.userName,
+            userId = it.userId
         )
     }
 }

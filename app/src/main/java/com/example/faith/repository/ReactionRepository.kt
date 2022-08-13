@@ -25,26 +25,26 @@ class ReactionRepository(private val database : FaithDatabase, private val postK
     }
 
     suspend fun addReaction(reaction: Reaction) {
-        database.reactionDatabaseDao.insert(DatabaseReaction(reaction.reactionId, reaction.postId, reaction.text, reaction.userName))
+        database.reactionDatabaseDao.insert(DatabaseReaction(reaction.reactionId, reaction.postId, reaction.userId, reaction.text))
     }
 
     suspend fun updateReaction(reactionId: Long, newReaction: Reaction) {
         val oldReaction = getReaction(reactionId)
         if (oldReaction != null) {
-            database.reactionDatabaseDao.update(DatabaseReaction(oldReaction.reactionId, oldReaction.postId, newReaction.text, oldReaction.userName))
+            database.reactionDatabaseDao.update(DatabaseReaction(oldReaction.reactionId, oldReaction.postId, oldReaction.userId, newReaction.text))
         }
     }
 
     suspend fun deleteReaction(reactionId: Long) {
         val reaction = getReaction(reactionId)
         if (reaction != null) {
-            database.reactionDatabaseDao.delete(DatabaseReaction(reaction.reactionId, reaction.postId, reaction.text, reaction.userName))
+            database.reactionDatabaseDao.delete(DatabaseReaction(reaction.reactionId, reaction.postId, reaction.userId, reaction.text))
         }
     }
 
     suspend fun getReaction(reactionId: Long): Reaction? {
         val databaseReaction = database.reactionDatabaseDao.get(reactionId)
-        val reaction = databaseReaction?.let { Reaction(it.reactionId, it.postId, it.text, it.userName) }
+        val reaction = databaseReaction?.let { Reaction(it.reactionId, it.postId, it.userId, it.text) }
         return reaction
     }
 
