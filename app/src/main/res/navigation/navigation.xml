@@ -47,6 +47,9 @@
         <action
             android:id="@+id/action_profileFragment_to_postDetailFragment"
             app:destination="@id/postDetailFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_postEditFragment"
+            app:destination="@id/postEditFragment" />
     </fragment>
     <fragment
         android:id="@+id/postCreateFragment"
@@ -91,6 +94,9 @@
         <action
             android:id="@+id/action_postEditFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_postEditFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/reactionEditFragment"

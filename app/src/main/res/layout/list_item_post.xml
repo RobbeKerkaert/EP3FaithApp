@@ -32,6 +32,19 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
+        <Button
+            android:id="@+id/makeFavoriteButton"
+            android:layout_width="46dp"
+            android:layout_height="wrap_content"
+            android:text="★"
+            android:onClick="@{() -> clickListener.onClickFavorite(post)}"
+            app:layout_constraintBottom_toTopOf="@+id/postText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.983"
+            app:layout_constraintStart_toEndOf="@+id/userNameText"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.727" />
+
         <TextView
             android:id="@+id/postText"
             android:layout_width="326dp"
@@ -71,10 +84,10 @@
 
         <Button
             android:id="@+id/deletePostButton"
-            android:layout_width="40dp"
+            android:layout_width="46dp"
             android:layout_height="wrap_content"
-            android:text="@string/cross"
             android:onClick="@{() -> clickListener.onClickDelete(post)}"
+            android:text="@string/cross"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.948"

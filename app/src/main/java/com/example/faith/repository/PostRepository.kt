@@ -13,9 +13,14 @@ import com.example.faith.login.CredentialsManager
 
 class PostRepository(private val database : FaithDatabase) {
     val posts = MediatorLiveData<List<Post>>()
+    val favoritePosts = MediatorLiveData<List<Post>>()
 
     private var changeableLiveData = Transformations.map(database.postDatabaseDao
         .getPostsByUserId(CredentialsManager.getUserDetails()["userId"] as Long)) {
+        it.asDomainModel()
+    }
+    private var changeableLiveFavorites = Transformations.map(database.postDatabaseDao
+        .getFavoritePostsByUserId(CredentialsManager.getUserDetails()["userId"] as Long)) {
         it.asDomainModel()
     }
 
@@ -24,6 +29,11 @@ class PostRepository(private val database : FaithDatabase) {
             changeableLiveData
         ) {
             posts.setValue(it)
+        }
+        favoritePosts.addSource(
+            changeableLiveFavorites
+        ) {
+            favoritePosts.setValue(it)
         }
     }
 
@@ -34,7 +44,14 @@ class PostRepository(private val database : FaithDatabase) {
     suspend fun updatePost(postId: Long, newPost: Post) {
         val oldPost = getPost(postId)
         if (oldPost != null) {
-            database.postDatabaseDao.update(DatabasePost(oldPost.postId, newPost.text, oldPost.userName, oldPost.userId))
+            database.postDatabaseDao.update(DatabasePost(oldPost.postId, newPost.text, oldPost.userName, oldPost.userId, oldPost.isFavorite))
+        }
+    }
+
+    suspend fun favoritePost(postId: Long) {
+        val oldPost = getPost(postId)
+        if (oldPost != null) {
+            database.postDatabaseDao.update(DatabasePost(oldPost.postId, oldPost.text, oldPost.userName, oldPost.userId, !oldPost.isFavorite))
         }
     }
 
@@ -47,7 +64,7 @@ class PostRepository(private val database : FaithDatabase) {
 
     suspend fun getPost(postId: Long): Post? {
         val databasePost = database.postDatabaseDao.get(postId)
-        val post = databasePost?.let { Post(it.postId, it.text, it.userName, it.userId) }
+        val post = databasePost?.let { Post(it.postId, it.text, it.userName, it.userId, it.isFavorite) }
         return post
     }
 }

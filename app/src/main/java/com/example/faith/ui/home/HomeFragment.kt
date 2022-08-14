@@ -7,24 +7,16 @@ import androidx.navigation.findNavController
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.faith.MainActivity
 import com.example.faith.R
 import com.example.faith.database.FaithDatabase
 import com.example.faith.databinding.FragmentHomeBinding
-import com.example.faith.domain.Post
-import com.example.faith.login.CredentialsManager
 
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -37,8 +29,6 @@ class HomeFragment : Fragment() {
         val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
         val viewModelFactory = HomeViewModelFactory(dataSource, application)
 
-        setHasOptionsMenu(true)
-
         binding.lifecycleOwner = this
 
         // For action bar title
@@ -48,14 +38,16 @@ class HomeFragment : Fragment() {
         homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
         var recyclerView = binding.postList
-        val adapter = HomeAdapter(PostListener {
+        val adapter = PostAdapter(PostListener {
                 postId, operation ->
             if (operation == 1) {
                 homeViewModel.onPostClicked(postId)
             } else if (operation == 2){
                 homeViewModel.onPostDeleteClick(postId)
-            } else {
+            } else if (operation == 3){
                 homeViewModel.onPostUpdateClick(postId)
+            } else {
+                homeViewModel.onPostFavoriteClick(postId)
             }
         })
 
@@ -84,6 +76,12 @@ class HomeFragment : Fragment() {
                 homeViewModel.onPostUpdated()
             }
         })
+        homeViewModel.canFavoritePost.observe(viewLifecycleOwner, Observer {post ->
+            post?.let {
+                homeViewModel.favoritePost(post)
+                homeViewModel.onPostFavorited()
+            }
+        })
 
         binding.homeViewModel = homeViewModel
 
@@ -93,16 +91,5 @@ class HomeFragment : Fragment() {
         }
 
         return binding.root
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.overflow_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(item!!,
-            requireView().findNavController())
-                || super.onOptionsItemSelected(item)
     }
 }

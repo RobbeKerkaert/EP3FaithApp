@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.faith.databinding.ListItemPostBinding
 import com.example.faith.domain.Post
 
-class HomeAdapter(val clickListener: PostListener) : ListAdapter<Post, HomeAdapter.ViewHolder>(PostDiffCallback()){
+class PostAdapter(val clickListener: PostListener) : ListAdapter<Post, PostAdapter.ViewHolder>(PostDiffCallback()){
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
@@ -54,4 +54,5 @@ class PostListener(val clickListener: (postId: Long, operation: Int) -> Unit) {
     fun onClick(post: Post) = clickListener(post.postId, 1)
     fun onClickDelete(post: Post) = clickListener(post.postId, 2)
     fun onClickUpdate(post: Post) = clickListener(post.postId, 3)
+    fun onClickFavorite(post: Post) = clickListener(post.postId, 4)
 }

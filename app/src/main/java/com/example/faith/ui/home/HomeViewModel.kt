@@ -55,10 +55,28 @@ class HomeViewModel(val database: PostDatabaseDao, application: Application): An
         _canEditPost.value = null
     }
 
+    // For favoriting
+    private val _canFavoritePost = MutableLiveData<Long?>()
+    val canFavoritePost
+        get() = _canFavoritePost
+
+    fun onPostFavoriteClick(postId: Long) {
+        _canFavoritePost.value = postId
+    }
+    fun onPostFavorited() {
+        _canFavoritePost.value = null
+    }
+
     // Functions
     fun deletePost(postId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deletePost(postId)
+        }
+    }
+
+    fun favoritePost(postId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.favoritePost(postId)
         }
     }
 }

@@ -2,9 +2,7 @@ package com.example.faith.ui.login
 
 import androidx.fragment.app.Fragment
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
@@ -22,6 +20,8 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.DataBindingUtil.setContentView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.example.faith.MainActivity
 import com.example.faith.database.FaithDatabase
 import com.example.faith.databinding.FragmentHomeBinding
@@ -51,6 +51,8 @@ class LoginFragment : Fragment() {
 
         // For action bar title
         (activity as MainActivity).supportActionBar?.title = "Log In"
+
+        setHasOptionsMenu(true)
 
         super.onCreateView(inflater, container, savedInstanceState)
         account = Auth0(
@@ -256,5 +258,16 @@ class LoginFragment : Fragment() {
                 text,
                 Snackbar.LENGTH_LONG
             ).show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.overflow_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return NavigationUI.onNavDestinationSelected(item!!,
+            requireView().findNavController())
+                || super.onOptionsItemSelected(item)
     }
 }
