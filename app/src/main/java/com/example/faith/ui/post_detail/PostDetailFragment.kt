@@ -8,9 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.faith.MainActivity
 import com.example.faith.R
@@ -18,7 +16,6 @@ import com.example.faith.database.FaithDatabase
 import com.example.faith.databinding.PostDetailFragmentBinding
 import com.example.faith.domain.Reaction
 import com.example.faith.login.CredentialsManager
-import com.example.faith.ui.home.HomeFragmentDirections
 
 class PostDetailFragment : Fragment() {
 
@@ -48,7 +45,7 @@ class PostDetailFragment : Fragment() {
 
         val recyclerView = binding.reactionList
 
-        val adapter = PostDetailAdapter(ReactionListener {
+        val adapter = ReactionAdapter(ReactionListener {
             reactionId, operation ->
             if (operation == 1) {
                 viewModel.onReactionUpdateClick(reactionId)

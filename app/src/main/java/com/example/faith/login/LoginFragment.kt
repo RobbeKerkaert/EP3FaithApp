@@ -33,18 +33,13 @@ import com.example.faith.ui.home.HomeViewModelFactory
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
-    private lateinit var viewModel: LoginViewModel
 
     // Login/logout-related properties
     private lateinit var account: Auth0
     private var cachedCredentials: Credentials? = null
     private var cachedUserProfile: UserProfile? = null
 
-    var currentUserDetails: MutableMap<String, Any> = mutableMapOf<String, Any>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private var currentUserDetails: MutableMap<String, Any> = mutableMapOf<String, Any>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
@@ -60,12 +55,6 @@ class LoginFragment : Fragment() {
             getString(R.string.com_auth0_domain)
         )
 
-        // All for viewmodel
-        val application = requireNotNull(this.activity).application
-        val dataSource = FaithDatabase.getInstance(application).userDatabaseDao
-        val viewModelFactory = LoginViewModelFactory(dataSource, application)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(LoginViewModel::class.java)
-
         // Binding inflation
         binding = DataBindingUtil.inflate<FragmentLoginBinding>(inflater,
             R.layout.fragment_login, container, false)
@@ -75,8 +64,6 @@ class LoginFragment : Fragment() {
             login()
         }
         binding.buttonLogout.setOnClickListener { logout() }
-//        binding.buttonGet.setOnClickListener { getUserMetadata() }
-//        binding.buttonSet.setOnClickListener { setUserMetadata() }
 
         // Check if user is still logged in
         checkForValidToken()

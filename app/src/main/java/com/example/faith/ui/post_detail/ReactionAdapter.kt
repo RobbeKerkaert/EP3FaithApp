@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.faith.databinding.ListItemReactionBinding
 import com.example.faith.domain.Reaction
 
-class PostDetailAdapter(val clickListener: ReactionListener) : ListAdapter<Reaction, PostDetailAdapter.ViewHolder>(ReactionDiffCallback()){
+class ReactionAdapter(val clickListener: ReactionListener) : ListAdapter<Reaction, ReactionAdapter.ViewHolder>(ReactionDiffCallback()){
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
