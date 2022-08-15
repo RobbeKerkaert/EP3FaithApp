@@ -6,14 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.faith.MainActivity
 import com.example.faith.R
+import com.example.faith.database.FaithDatabase
+import com.example.faith.databinding.ProfileFragmentBinding
+import com.example.faith.login.CredentialsManager
+import com.example.faith.ui.home.*
 
 class ProfileFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = ProfileFragment()
-    }
 
     private lateinit var viewModel: ProfileViewModel
 
@@ -23,14 +28,69 @@ class ProfileFragment : Fragment() {
     ): View? {
         // For action bar title
         (activity as MainActivity).supportActionBar?.title = "Your Profile"
+        // Inflate the layout for this fragment
+        val binding = DataBindingUtil.inflate<ProfileFragmentBinding>(inflater,
+            R.layout.profile_fragment, container, false)
 
-        return inflater.inflate(R.layout.profile_fragment, container, false)
-    }
+        // Necessary starter things
+        val application = requireNotNull(this.activity).application
+        val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
+        val viewModelFactory = ProfileViewModelFactory(dataSource, application)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-        // TODO: Use the ViewModel
+        binding.lifecycleOwner = this
+
+        // HomeViewModel & RecyclerView
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ProfileViewModel::class.java)
+
+        var recyclerView = binding.favoritesList
+        val adapter = PostAdapter(PostListener {
+                postId, operation ->
+            if (operation == 1) {
+                viewModel.onPostClicked(postId)
+            } else if (operation == 2){
+                viewModel.onPostDeleteClick(postId)
+            } else if (operation == 3){
+                viewModel.onPostUpdateClick(postId)
+            } else {
+                viewModel.onPostFavoriteClick(postId)
+        }
+        })
+
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // For clicks on recyclerview
+        viewModel.posts.observe(viewLifecycleOwner, Observer {
+            adapter.submitList(it)
+        })
+        viewModel.navigateToPostDetail.observe(viewLifecycleOwner, Observer {post ->
+            post?.let {
+                this.findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToPostDetailFragment(post))
+                viewModel.onPostNavigated()
+            }
+        })
+        viewModel.canDeletePost.observe(viewLifecycleOwner, Observer {post ->
+            post?.let {
+                viewModel.deletePost(post)
+                viewModel.onPostDeleted()
+            }
+        })
+        viewModel.canEditPost.observe(viewLifecycleOwner, Observer {post ->
+            post?.let {
+                this.findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToPostEditFragment(post))
+                viewModel.onPostUpdated()
+            }
+        })
+        viewModel.canFavoritePost.observe(viewLifecycleOwner, Observer {post ->
+            post?.let {
+                viewModel.favoritePost(post)
+                viewModel.onPostFavorited()
+            }
+        })
+
+        binding.viewModel = viewModel
+
+        return binding.root
     }
 
 }

@@ -4,6 +4,7 @@ import androidx.room.*
 import com.example.faith.database.reaction.DatabaseReaction
 import com.example.faith.database.user.DatabaseUser
 import com.example.faith.domain.Post
+import com.example.faith.domain.PostState
 
 @Entity(tableName = "post_table")
 data class DatabasePost(
@@ -19,6 +20,9 @@ data class DatabasePost(
     @ColumnInfo(name = "userId")
     var userId: Long = 0L,
 
+    @ColumnInfo(name = "postState")
+    var postState: PostState = PostState.NEW,
+
     @ColumnInfo(name = "favorited")
     var isFavorite: Boolean = false
 )
@@ -30,6 +34,7 @@ fun List<DatabasePost>.asDomainModel() : List<Post> {
             text = it.text,
             userName = it.userName,
             userId = it.userId,
+            postState = it.postState,
             isFavorite = it.isFavorite
         )
     }

@@ -15,7 +15,9 @@ data class DatabaseUser(
     @ColumnInfo(name = "userName")
     var userName: String = "",
     @ColumnInfo(name = "email")
-    var email: String = ""
+    var email: String = "",
+    @ColumnInfo(name = "isMonitor")
+    var isMonitor: Boolean = false
 )
 
 fun List<DatabaseUser>.asDomainModel() : List<User> {
@@ -23,7 +25,8 @@ fun List<DatabaseUser>.asDomainModel() : List<User> {
         User(
             userId = it.userId,
             userName = it.userName,
-            email = it.email
+            email = it.email,
+            isMonitor = it.isMonitor
         )
     }
 }

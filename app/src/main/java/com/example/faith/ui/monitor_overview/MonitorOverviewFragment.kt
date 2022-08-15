@@ -6,13 +6,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.faith.MainActivity
 import com.example.faith.R
+import com.example.faith.database.FaithDatabase
+import com.example.faith.databinding.FragmentHomeBinding
+import com.example.faith.databinding.MonitorOverviewFragmentBinding
+import com.example.faith.ui.home.*
 
 class MonitorOverviewFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = MonitorOverviewFragment()
-    }
 
     private lateinit var viewModel: MonitorOverviewViewModel
 
@@ -20,13 +27,46 @@ class MonitorOverviewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.monitor_overview_fragment, container, false)
-    }
+        // Inflate the layout for this fragment
+        val binding = DataBindingUtil.inflate<MonitorOverviewFragmentBinding>(inflater,
+            R.layout.monitor_overview_fragment, container, false)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MonitorOverviewViewModel::class.java)
-        // TODO: Use the ViewModel
+        // For action bar title
+        (activity as MainActivity).supportActionBar?.title = "Post Overview"
+
+        // Necessary starter things
+        val application = requireNotNull(this.activity).application
+        val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
+        val viewModelFactory = MonitorOverviewViewModelFactory(dataSource, application)
+
+        binding.lifecycleOwner = this
+
+        // HomeViewModel & RecyclerView
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MonitorOverviewViewModel::class.java)
+
+        var recyclerView = binding.monitorPostList
+        val adapter = MonitorPostAdapter(MonitorPostListener() {
+                postId, operation ->
+            viewModel.onPostClicked(postId)
+        })
+
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // For clicks on recyclerview
+        viewModel.posts.observe(viewLifecycleOwner, Observer {
+            adapter.submitList(it)
+        })
+        viewModel.navigateToPostDetail.observe(viewLifecycleOwner, Observer {post ->
+            post?.let {
+                this.findNavController().navigate(MonitorOverviewFragmentDirections.actionMonitorOverviewFragmentToPostDetailFragment(post))
+                viewModel.onPostNavigated()
+            }
+        })
+
+        binding.viewModel = viewModel
+
+        return binding.root
     }
 
 }

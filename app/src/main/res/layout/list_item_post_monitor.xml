@@ -10,7 +10,7 @@
 
         <variable
             name="clickListener"
-            type="com.example.faith.ui.home.PostListener" />
+            type="com.example.faith.ui.monitor_overview.MonitorPostListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

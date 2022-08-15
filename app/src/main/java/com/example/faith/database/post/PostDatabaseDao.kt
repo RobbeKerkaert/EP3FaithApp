@@ -2,7 +2,7 @@ package com.example.faith.database.post
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.faith.database.user.DatabaseUser
+import com.example.faith.domain.PostState
 
 @Dao
 interface PostDatabaseDao {
@@ -56,10 +56,16 @@ interface PostDatabaseDao {
     fun getPostsByUserId(key: Long): LiveData<List<DatabasePost>>
 
     /**
-     * Selects and returns all posts with a given userId as LiveData
+     * Selects and returns all favorited posts with a given userId as LiveData
      */
     @Query("SELECT * from post_table WHERE userId = :key AND favorited = ${true}")
     fun getFavoritePostsByUserId(key: Long): LiveData<List<DatabasePost>>
+
+    /**
+     * Selects and returns posts given a certain postState
+     */
+    @Query("SELECT * from post_table WHERE userId IN (:userIdList) AND postState = :postState")
+    fun getMonitorPostsByPostState(userIdList: List<Long>, postState: PostState): LiveData<List<DatabasePost>>
 
     @Transaction
     @Query("SELECT * FROM post_table")

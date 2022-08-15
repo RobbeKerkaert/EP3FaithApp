@@ -26,7 +26,7 @@ class UserRepository(private val database : FaithDatabase) {
 
     suspend fun getUserByEmail(email: String): User {
         val databaseUser = database.userDatabaseDao.getUserByEmail(email)
-        val user = databaseUser?.let { User(it.userId, it.userName, it.email) }
+        val user = databaseUser?.let { User(it.userId, it.userName, it.email, it.isMonitor) }
         return user
     }
 }

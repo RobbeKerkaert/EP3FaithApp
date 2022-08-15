@@ -7,6 +7,9 @@
         android:id="@+id/homeFragment"
         android:title="@string/home" />
     <item
+        android:id="@+id/monitorOverviewFragment"
+        android:title="@string/post_overview" />
+    <item
         android:id="@+id/profileFragment"
         android:title="@string/profile" />
 </menu>

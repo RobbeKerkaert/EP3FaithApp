@@ -18,18 +18,10 @@ import com.example.faith.R
 import com.google.android.material.snackbar.Snackbar
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.DataBindingUtil.setContentView
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.faith.MainActivity
-import com.example.faith.database.FaithDatabase
-import com.example.faith.databinding.FragmentHomeBinding
 import com.example.faith.login.CredentialsManager
-import com.example.faith.login.LoginViewModel
-import com.example.faith.login.LoginViewModelFactory
-import com.example.faith.ui.home.HomeViewModel
-import com.example.faith.ui.home.HomeViewModelFactory
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
@@ -154,9 +146,19 @@ class LoginFragment : Fragment() {
 
                     val userId = userProfile.getUserMetadata()["userId"] as String?
                     val userName = userProfile.getUserMetadata()["userName"] as String?
-                    if (userId != null) {
+                    val isMonitor = userProfile.getUserMetadata()["isMonitor"] as String?
+                    val userIdList = userProfile.getUserMetadata()["userIdList"] as ArrayList<Double>?
+                    if (userId != null && userName != null && isMonitor != null && userIdList != null) {
                         currentUserDetails["userId"] = userId.toLong()
                         currentUserDetails["userName"] = userName.toString()
+                        currentUserDetails["isMonitor"] = isMonitor.toBoolean()
+                        if (currentUserDetails["isMonitor"] as Boolean) {
+                            currentUserDetails["userIdList"] = userIdList.map {
+                                it.toLong()
+                            }.toList()
+                        } else {
+                            currentUserDetails["userIdList"] = emptyList<Long>()
+                        }
                         CredentialsManager.setUserDetails(currentUserDetails)
                     }
                 }
@@ -249,12 +251,23 @@ class LoginFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.overflow_menu, menu)
+        inflater?.inflate(R.menu.navdrawer_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return NavigationUI.onNavDestinationSelected(item!!,
             requireView().findNavController())
                 || super.onOptionsItemSelected(item)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+//        val isLoggedIn = cachedCredentials != null
+//        val homeFragment = menu.findItem(R.id.homeFragment)
+//        val profileFragment = menu.findItem(R.id.profileFragment)
+//        if (isLoggedIn) {
+//            homeFragment.isVisible = currentUserDetails["isMonitor"] as Boolean
+//        } else {
+//
+//        }
     }
 }

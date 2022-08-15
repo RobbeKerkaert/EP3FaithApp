@@ -1,39 +1,43 @@
 package com.example.faith.repository
 
-import android.provider.ContactsContract
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import androidx.room.Database
 import com.example.faith.database.FaithDatabase
 import com.example.faith.database.post.DatabasePost
 import com.example.faith.database.post.asDomainModel
 import com.example.faith.domain.Post
+import com.example.faith.domain.PostState
 import com.example.faith.login.CredentialsManager
 
 class PostRepository(private val database : FaithDatabase) {
     val posts = MediatorLiveData<List<Post>>()
     val favoritePosts = MediatorLiveData<List<Post>>()
+    val monitorPosts = MediatorLiveData<List<Post>>()
 
-    private var changeableLiveData = Transformations.map(database.postDatabaseDao
+    private var postsByUserId = Transformations.map(database.postDatabaseDao
         .getPostsByUserId(CredentialsManager.getUserDetails()["userId"] as Long)) {
         it.asDomainModel()
     }
-    private var changeableLiveFavorites = Transformations.map(database.postDatabaseDao
+    private var favoritePostsByUserId = Transformations.map(database.postDatabaseDao
         .getFavoritePostsByUserId(CredentialsManager.getUserDetails()["userId"] as Long)) {
+        it.asDomainModel()
+    }
+    private var monitorPostsByPostState = Transformations.map(database.postDatabaseDao
+        .getMonitorPostsByPostState(CredentialsManager.getUserDetails()["userIdList"] as List<Long>, PostState.NEW)) {
         it.asDomainModel()
     }
 
     init {
-        posts.addSource(
-            changeableLiveData
-        ) {
+        posts.addSource(postsByUserId) {
             posts.setValue(it)
         }
-        favoritePosts.addSource(
-            changeableLiveFavorites
-        ) {
+        favoritePosts.addSource(favoritePostsByUserId) {
             favoritePosts.setValue(it)
+        }
+
+        monitorPosts.addSource(monitorPostsByPostState) {
+            monitorPosts.setValue(it)
         }
     }
 
@@ -44,14 +48,14 @@ class PostRepository(private val database : FaithDatabase) {
     suspend fun updatePost(postId: Long, newPost: Post) {
         val oldPost = getPost(postId)
         if (oldPost != null) {
-            database.postDatabaseDao.update(DatabasePost(oldPost.postId, newPost.text, oldPost.userName, oldPost.userId, oldPost.isFavorite))
+            database.postDatabaseDao.update(DatabasePost(oldPost.postId, newPost.text, oldPost.userName, oldPost.userId, oldPost.postState, oldPost.isFavorite))
         }
     }
 
     suspend fun favoritePost(postId: Long) {
         val oldPost = getPost(postId)
         if (oldPost != null) {
-            database.postDatabaseDao.update(DatabasePost(oldPost.postId, oldPost.text, oldPost.userName, oldPost.userId, !oldPost.isFavorite))
+            database.postDatabaseDao.update(DatabasePost(oldPost.postId, oldPost.text, oldPost.userName, oldPost.userId, oldPost.postState, !oldPost.isFavorite))
         }
     }
 
@@ -64,7 +68,12 @@ class PostRepository(private val database : FaithDatabase) {
 
     suspend fun getPost(postId: Long): Post? {
         val databasePost = database.postDatabaseDao.get(postId)
-        val post = databasePost?.let { Post(it.postId, it.text, it.userName, it.userId, it.isFavorite) }
+        val post = databasePost?.let { Post(it.postId, it.text, it.userName, it.userId, it.postState, it.isFavorite) }
         return post
+    }
+
+    suspend fun getPostsByPostState(userIdList: List<Long>, postState: PostState): LiveData<List<Post>> {
+        val databasePostList = database.postDatabaseDao.getMonitorPostsByPostState(userIdList, postState)
+        return databasePostList as LiveData<List<Post>>
     }
 }
