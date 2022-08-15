@@ -35,7 +35,6 @@ class PostRepository(private val database : FaithDatabase) {
         favoritePosts.addSource(favoritePostsByUserId) {
             favoritePosts.setValue(it)
         }
-
         monitorPosts.addSource(monitorPostsByPostState) {
             monitorPosts.setValue(it)
         }
@@ -72,8 +71,22 @@ class PostRepository(private val database : FaithDatabase) {
         return post
     }
 
-    suspend fun getPostsByPostState(userIdList: List<Long>, postState: PostState): LiveData<List<Post>> {
-        val databasePostList = database.postDatabaseDao.getMonitorPostsByPostState(userIdList, postState)
+    suspend fun updatePostState(postId: Long, postState: PostState) {
+        val oldPost = getPost(postId)
+        if (oldPost != null) {
+            val newPost = DatabasePost(oldPost.postId, oldPost.text, oldPost.userName, oldPost.userId, oldPost.postState, oldPost.isFavorite)
+            if (oldPost.postState == PostState.NEW && postState == PostState.READ) {
+                newPost.postState = PostState.READ
+                database.postDatabaseDao.updatePostState(newPost)
+            } else if (oldPost.postState == PostState.READ && postState == PostState.ANSWERED) {
+                newPost.postState = PostState.ANSWERED
+                database.postDatabaseDao.updatePostState(newPost)
+            }
+        }
+    }
+
+    fun getPostsByPostState(postState: PostState): LiveData<List<Post>> {
+        val databasePostList = database.postDatabaseDao.getMonitorPostsByPostState(CredentialsManager.getUserDetails()["userIdList"] as List<Long>, postState)
         return databasePostList as LiveData<List<Post>>
     }
 }

@@ -52,4 +52,5 @@ class MonitorPostDiffCallback : DiffUtil.ItemCallback<Post>() {
 
 class MonitorPostListener(val clickListener: (postId: Long, operation: Int) -> Unit) {
     fun onClick(post: Post) = clickListener(post.postId, 1)
+    fun onClickClose(post: Post) = clickListener(post.postId, 2)
 }

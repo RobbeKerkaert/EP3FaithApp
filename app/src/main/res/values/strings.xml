@@ -19,6 +19,7 @@
     <string name="newPosts">New</string>
     <string name="readPosts">Read</string>
     <string name="closedPosts">Closed</string>
+    <string name="close">Close</string>
 
     <!-- Strings related to login | Need to remove this eventually, in favor of auth0 strings -->
     <string name="prompt_email">Email</string>

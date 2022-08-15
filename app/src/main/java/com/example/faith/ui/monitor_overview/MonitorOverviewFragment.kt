@@ -8,15 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.faith.MainActivity
 import com.example.faith.R
 import com.example.faith.database.FaithDatabase
-import com.example.faith.databinding.FragmentHomeBinding
 import com.example.faith.databinding.MonitorOverviewFragmentBinding
-import com.example.faith.ui.home.*
+import com.example.faith.domain.PostState
 
 class MonitorOverviewFragment : Fragment() {
 
@@ -47,22 +45,44 @@ class MonitorOverviewFragment : Fragment() {
         var recyclerView = binding.monitorPostList
         val adapter = MonitorPostAdapter(MonitorPostListener() {
                 postId, operation ->
-            viewModel.onPostClicked(postId)
+            if (operation == 1) {
+                viewModel.onPostClicked(postId)
+            } else {
+                viewModel.onPostCloseClicked(postId)
+            }
         })
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // For clicks on recyclerview
-        viewModel.posts.observe(viewLifecycleOwner, Observer {
+        viewModel.monitorPosts.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
         })
         viewModel.navigateToPostDetail.observe(viewLifecycleOwner, Observer {post ->
             post?.let {
                 this.findNavController().navigate(MonitorOverviewFragmentDirections.actionMonitorOverviewFragmentToPostDetailFragment(post))
+                viewModel.updatePostState(post, PostState.READ)
                 viewModel.onPostNavigated()
             }
         })
+        viewModel.changePostState.observe(viewLifecycleOwner, Observer {post ->
+            post?.let {
+                viewModel.updatePostState(post, PostState.ANSWERED)
+                viewModel.onPostClosed()
+            }
+        })
+
+        // OnClickListeners
+        binding.newPostsButton.setOnClickListener {
+            viewModel.movePostState(PostState.NEW)
+        }
+        binding.readPostsButton.setOnClickListener {
+            viewModel.movePostState(PostState.READ)
+        }
+        binding.answeredPostsButton.setOnClickListener {
+            viewModel.movePostState(PostState.ANSWERED)
+        }
 
         binding.viewModel = viewModel
 

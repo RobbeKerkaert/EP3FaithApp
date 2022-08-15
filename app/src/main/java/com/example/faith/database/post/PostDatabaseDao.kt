@@ -19,6 +19,12 @@ interface PostDatabaseDao {
     suspend fun update(post: DatabasePost)
 
     /**
+     * Updates a post's state
+     */
+    @Update
+    suspend fun updatePostState(post: DatabasePost)
+
+    /**
      * Deletes post with postId from table
      */
     @Delete
