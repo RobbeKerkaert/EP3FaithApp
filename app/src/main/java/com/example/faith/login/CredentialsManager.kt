@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.auth0.android.result.Credentials
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
@@ -27,6 +29,17 @@ object CredentialsManager {
         .build()
 
     var currentUserDetails: MutableMap<String, Any> = mutableMapOf<String, Any>()
+
+    private val _isLoggedIn = MutableLiveData<Boolean>()
+    val isLoggedIn
+        get() = _isLoggedIn
+
+    fun setLoggedIn() {
+        _isLoggedIn.value = true
+    }
+    fun setLoggedOut() {
+        _isLoggedIn.value = false
+    }
 
     // Functions for metadata
     fun setUserDetails(userDetails: MutableMap<String, Any>) {

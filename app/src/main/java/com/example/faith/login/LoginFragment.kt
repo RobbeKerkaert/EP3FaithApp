@@ -1,5 +1,6 @@
 package com.example.faith.ui.login
 
+import android.content.Context
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.*
@@ -22,6 +23,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.faith.MainActivity
 import com.example.faith.login.CredentialsManager
+import com.google.android.material.navigation.NavigationView
+
+
+
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
@@ -88,11 +93,11 @@ class LoginFragment : Fragment() {
                 }
 
                 override fun onSuccess(credentials: Credentials) {
+                    CredentialsManager.setLoggedIn()
                     cachedCredentials = credentials
                     showSnackBar(getString(R.string.login_success_message, credentials.accessToken))
                     CredentialsManager.saveCredentials(requireContext(), credentials)
                     checkForValidToken()
-                    updateUI()
                 }
             })
 
@@ -111,12 +116,14 @@ class LoginFragment : Fragment() {
                 }
 
                 override fun onSuccess(payload: Void?) {
+                    CredentialsManager.setLoggedOut()
                     cachedCredentials = null
                     cachedUserProfile = null
                     updateUI()
                     currentUserDetails["userId"] = 0
                     currentUserDetails["userName"] = ""
                     CredentialsManager.setUserDetails(currentUserDetails)
+                    setNavigationVisibility()
                 }
 
             })
@@ -161,37 +168,10 @@ class LoginFragment : Fragment() {
                         }
                         CredentialsManager.setUserDetails(currentUserDetails)
                     }
+                    setNavigationVisibility()
                 }
 
             })
-    }
-
-    private fun setUserMetadata() {
-        // Guard against getting the metadata when no user is logged in
-        if (cachedCredentials == null) {
-            return
-        }
-
-//        val usersClient = UsersAPIClient(account, cachedCredentials!!.accessToken!!)
-//        val metadata = mapOf("userId" to binding.edittextCountry.text.toString())
-//
-//        usersClient
-//            .updateMetadata(cachedUserProfile!!.getId()!!, metadata)
-//            .start(object : Callback<UserProfile, ManagementException> {
-//
-//                override fun onFailure(exception: ManagementException) {
-//                    showSnackBar(getString(R.string.general_failure_with_exception_code,
-//                        exception.getCode()))
-//                }
-//
-//                override fun onSuccess(profile: UserProfile) {
-//                    cachedUserProfile = profile
-//                    updateUI()
-//
-//                    showSnackBar(getString(R.string.general_success_message))
-//                }
-//
-//            })
     }
 
     // UI Methods
@@ -249,25 +229,23 @@ class LoginFragment : Fragment() {
             ).show()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.navdrawer_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(item!!,
-            requireView().findNavController())
-                || super.onOptionsItemSelected(item)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-//        val isLoggedIn = cachedCredentials != null
-//        val homeFragment = menu.findItem(R.id.homeFragment)
-//        val profileFragment = menu.findItem(R.id.profileFragment)
-//        if (isLoggedIn) {
-//            homeFragment.isVisible = currentUserDetails["isMonitor"] as Boolean
-//        } else {
-//
-//        }
+    private fun setNavigationVisibility() {
+        val activity: MainActivity = context as MainActivity
+        val navigationView = activity.findViewById(R.id.navView) as NavigationView
+        if (CredentialsManager.isLoggedIn.value == true) {
+            if (currentUserDetails["isMonitor"] as Boolean) {
+                navigationView.menu.findItem(R.id.homeFragment).isVisible = false
+                navigationView.menu.findItem(R.id.profileFragment).isVisible = false
+                navigationView.menu.findItem(R.id.monitorOverviewFragment).isVisible = true
+            } else {
+                navigationView.menu.findItem(R.id.homeFragment).isVisible = true
+                navigationView.menu.findItem(R.id.profileFragment).isVisible = true
+                navigationView.menu.findItem(R.id.monitorOverviewFragment).isVisible = false
+            }
+        } else {
+            navigationView.menu.findItem(R.id.homeFragment).isVisible = false
+            navigationView.menu.findItem(R.id.profileFragment).isVisible = false
+            navigationView.menu.findItem(R.id.monitorOverviewFragment).isVisible = false
+        }
     }
 }
