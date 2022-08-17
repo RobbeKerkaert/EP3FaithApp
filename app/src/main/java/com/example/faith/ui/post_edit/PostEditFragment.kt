@@ -11,11 +11,8 @@ import androidx.navigation.findNavController
 import com.example.faith.MainActivity
 import com.example.faith.R
 import com.example.faith.database.FaithDatabase
-import com.example.faith.databinding.PostCreateFragmentBinding
 import com.example.faith.databinding.PostEditFragmentBinding
 import com.example.faith.domain.Post
-import com.example.faith.ui.post_detail.PostDetailViewModel
-import com.example.faith.ui.post_detail.PostDetailViewModelFactory
 
 class PostEditFragment : Fragment() {
 

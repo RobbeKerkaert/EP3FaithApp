@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.faith.MainActivity
@@ -34,7 +35,7 @@ class ProfileFragment : Fragment() {
 
         // Necessary starter things
         val application = requireNotNull(this.activity).application
-        val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
+        val dataSource = FaithDatabase.getInstance(application).userDatabaseDao
         val viewModelFactory = ProfileViewModelFactory(dataSource, application)
 
         binding.lifecycleOwner = this
@@ -87,6 +88,11 @@ class ProfileFragment : Fragment() {
                 viewModel.onPostFavorited()
             }
         })
+
+        // Click listeners
+        binding.toEditProfileButton.setOnClickListener {view:View ->
+            view.findNavController().navigate(R.id.action_profileFragment_to_profileEditFragment)
+        }
 
         binding.viewModel = viewModel
 

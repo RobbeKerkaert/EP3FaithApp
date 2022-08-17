@@ -1,7 +1,9 @@
 package com.example.faith.ui.home
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +26,7 @@ class PostAdapter(val clickListener: PostListener) : ListAdapter<Post, PostAdapt
 
         fun bind(clickListener: PostListener, item: Post) {
             binding.post = item
+//            binding.imageView.setImageURI(item.imageUri.toUri())
             binding.clickListener = clickListener
             binding.executePendingBindings()
         }

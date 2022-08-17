@@ -3,6 +3,7 @@ package com.example.faith.database.reaction
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.faith.database.post.DatabasePost
+import com.example.faith.database.post.DatabasePostReactions
 
 @Dao
 interface ReactionDatabaseDao {
@@ -42,4 +43,8 @@ interface ReactionDatabaseDao {
      */
     @Query("SELECT * from reaction_table WHERE postId = :key")
     fun getReactionsById(key: Long): LiveData<List<DatabaseReaction>>
+
+    @Transaction
+    @Query("SELECT * FROM post_table WHERE postId = :key")
+    fun getPostWithReactions(key: Long): LiveData<DatabasePostReactions>
 }

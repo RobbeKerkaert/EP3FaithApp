@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -19,11 +20,8 @@ import com.example.faith.login.CredentialsManager
 
 class PostDetailFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = PostDetailFragment()
-    }
-
     private lateinit var viewModel: PostDetailViewModel
+    private lateinit var binding: PostDetailFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -31,7 +29,7 @@ class PostDetailFragment : Fragment() {
         (activity as MainActivity).supportActionBar?.title = "Post Reactions"
 
         // Necessary starter things
-        val binding: PostDetailFragmentBinding =
+        binding =
             DataBindingUtil.inflate(inflater, R.layout.post_detail_fragment, container, false)
 
         val arguments = PostDetailFragmentArgs.fromBundle(requireArguments())
@@ -66,6 +64,7 @@ class PostDetailFragment : Fragment() {
                 viewModel.addReaction(reaction)
                 binding.reactionText.setText("")
             }
+            binding.postImage.setImageBitmap(viewModel.post.value?.image)
         }
 
         viewModel.reactions.observe(viewLifecycleOwner, Observer {

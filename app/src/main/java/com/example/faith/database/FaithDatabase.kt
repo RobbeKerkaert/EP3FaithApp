@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.faith.database.post.DatabasePost
 import com.example.faith.database.post.PostDatabaseDao
 import com.example.faith.database.reaction.DatabaseReaction
@@ -12,7 +13,9 @@ import com.example.faith.database.user.DatabaseUser
 import com.example.faith.database.user.UserDatabaseDao
 import java.io.File
 
-@Database(entities = [DatabaseUser::class, DatabasePost::class, DatabaseReaction::class], version = 12, exportSchema = false)
+@Database(entities = [DatabaseUser::class, DatabasePost::class, DatabaseReaction::class], version = 14, exportSchema = false)
+
+@TypeConverters(Converters::class)
 abstract class FaithDatabase() : RoomDatabase() {
 
     abstract val reactionDatabaseDao: ReactionDatabaseDao

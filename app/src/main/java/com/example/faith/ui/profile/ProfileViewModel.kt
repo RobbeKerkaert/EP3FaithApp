@@ -1,20 +1,33 @@
 package com.example.faith.ui.profile
 
 import android.app.Application
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.faith.database.FaithDatabase
+import com.example.faith.database.post.DatabasePost
 import com.example.faith.database.post.PostDatabaseDao
+import com.example.faith.database.user.DatabaseUser
+import com.example.faith.database.user.UserDatabaseDao
+import com.example.faith.login.CredentialsManager
 import com.example.faith.repository.PostRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(val database: PostDatabaseDao,application: Application) : ViewModel() {
+class ProfileViewModel(val database: UserDatabaseDao, application: Application) : ViewModel() {
     // For database
     val db = FaithDatabase.getInstance(application.applicationContext)
     private val repository = PostRepository(db)
+    private val userDb = database
     val posts = repository.favoritePosts
+
+    private val databaseUser = MediatorLiveData<DatabaseUser>()
+    var user = databaseUser
+
+    init {
+        databaseUser.addSource(userDb.getUserById(CredentialsManager.getUserDetails()["userId"] as Long), databaseUser::setValue)
+    }
 
     // For navigation
     private val _navigateToPostDetail = MutableLiveData<Long?>()

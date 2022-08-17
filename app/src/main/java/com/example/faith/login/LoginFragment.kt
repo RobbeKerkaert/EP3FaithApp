@@ -1,6 +1,5 @@
 package com.example.faith.ui.login
 
-import android.content.Context
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.*
@@ -19,14 +18,9 @@ import com.example.faith.R
 import com.google.android.material.snackbar.Snackbar
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
 import com.example.faith.MainActivity
 import com.example.faith.login.CredentialsManager
 import com.google.android.material.navigation.NavigationView
-
-
-
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
@@ -53,13 +47,10 @@ class LoginFragment : Fragment() {
         )
 
         // Binding inflation
-        binding = DataBindingUtil.inflate<FragmentLoginBinding>(inflater,
-            R.layout.fragment_login, container, false)
+        binding = DataBindingUtil.inflate<FragmentLoginBinding>(inflater, R.layout.fragment_login, container, false)
 
         // Button Listeners
-        binding.buttonLogin.setOnClickListener {
-            login()
-        }
+        binding.buttonLogin.setOnClickListener { login() }
         binding.buttonLogout.setOnClickListener { logout() }
 
         // Check if user is still logged in
@@ -150,28 +141,61 @@ class LoginFragment : Fragment() {
                 override fun onSuccess(userProfile: UserProfile) {
                     cachedUserProfile = userProfile
                     updateUI()
-
-                    val userId = userProfile.getUserMetadata()["userId"] as String?
-                    val userName = userProfile.getUserMetadata()["userName"] as String?
-                    val isMonitor = userProfile.getUserMetadata()["isMonitor"] as String?
-                    val userIdList = userProfile.getUserMetadata()["userIdList"] as ArrayList<Double>?
-                    if (userId != null && userName != null && isMonitor != null && userIdList != null) {
-                        currentUserDetails["userId"] = userId.toLong()
-                        currentUserDetails["userName"] = userName.toString()
-                        currentUserDetails["isMonitor"] = isMonitor.toBoolean()
-                        if (currentUserDetails["isMonitor"] as Boolean) {
-                            currentUserDetails["userIdList"] = userIdList.map {
-                                it.toLong()
-                            }.toList()
-                        } else {
-                            currentUserDetails["userIdList"] = emptyList<Long>()
-                        }
-                        CredentialsManager.setUserDetails(currentUserDetails)
-                    }
+                    setUserDetails(userProfile)
                     setNavigationVisibility()
                 }
 
             })
+    }
+
+    private fun setUserMetadata(userName: String) {
+        // Guard against getting the metadata when no user is logged in
+        if (cachedCredentials == null) {
+            return
+        }
+
+        val usersClient = UsersAPIClient(account, cachedCredentials!!.accessToken!!)
+
+        currentUserDetails["userName"] = userName
+
+        usersClient
+            .updateMetadata(cachedUserProfile!!.getId()!!, currentUserDetails)
+            .start(object : Callback<UserProfile, ManagementException> {
+
+                override fun onFailure(exception: ManagementException) {
+                    showSnackBar(getString(R.string.general_failure_with_exception_code,
+                        exception.getCode()))
+                }
+
+                override fun onSuccess(profile: UserProfile) {
+                    cachedUserProfile = profile
+                    updateUI()
+
+                    showSnackBar(getString(R.string.general_success_message))
+                }
+
+            })
+    }
+
+    private fun setUserDetails(profile: UserProfile) {
+        val userMetadata = profile.getUserMetadata()
+        val userId = userMetadata["userId"] as String?
+        val userName = userMetadata["userName"] as String?
+        val isMonitor = userMetadata["isMonitor"] as String?
+        val userIdList = userMetadata["userIdList"] as ArrayList<Double>?
+        if (userId != null && userName != null && isMonitor != null && userIdList != null) {
+            currentUserDetails["userId"] = userId.toLong()
+            currentUserDetails["userName"] = userName.toString()
+            currentUserDetails["isMonitor"] = isMonitor.toBoolean()
+            if (currentUserDetails["isMonitor"] as Boolean) {
+                currentUserDetails["userIdList"] = userIdList.map {
+                    it.toLong()
+                }.toList()
+            } else {
+                currentUserDetails["userIdList"] = emptyList<Long>()
+            }
+            CredentialsManager.setUserDetails(currentUserDetails)
+        }
     }
 
     // UI Methods
@@ -195,6 +219,10 @@ class LoginFragment : Fragment() {
 
                 override fun onSuccess(profile: UserProfile) {
                     cachedUserProfile = profile
+                    var userDetails = CredentialsManager.getUserDetails()
+                    if (userDetails["userName"] != currentUserDetails["userName"]) {
+                        setUserMetadata(userDetails["userName"] as String)
+                    }
                     updateUI()
                     getUserMetadata()
                 }

@@ -1,5 +1,6 @@
 package com.example.faith.database.user
 
+import android.graphics.Bitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -17,7 +18,9 @@ data class DatabaseUser(
     @ColumnInfo(name = "email")
     var email: String = "",
     @ColumnInfo(name = "isMonitor")
-    var isMonitor: Boolean = false
+    var isMonitor: Boolean = false,
+    @ColumnInfo(name = "imageUri")
+    var image: Bitmap? = null
 )
 
 fun List<DatabaseUser>.asDomainModel() : List<User> {
@@ -26,7 +29,8 @@ fun List<DatabaseUser>.asDomainModel() : List<User> {
             userId = it.userId,
             userName = it.userName,
             email = it.email,
-            isMonitor = it.isMonitor
+            isMonitor = it.isMonitor,
+            image = it.image
         )
     }
 }

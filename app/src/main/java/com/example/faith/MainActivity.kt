@@ -28,6 +28,9 @@ class MainActivity : AppCompatActivity() {
         binding.navView.menu.findItem(R.id.homeFragment).isVisible = false
         binding.navView.menu.findItem(R.id.profileFragment).isVisible = false
         binding.navView.menu.findItem(R.id.monitorOverviewFragment).isVisible = false
+
+        // For action bar title
+        this.supportActionBar?.title = "Log In"
     }
 
     override fun onSupportNavigateUp(): Boolean {

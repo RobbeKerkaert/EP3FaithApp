@@ -16,14 +16,4 @@ class LoginViewModel(val database: UserDatabaseDao, application: Application): A
     val db = FaithDatabase.getInstance(application.applicationContext)
     private val repository = UserRepository(db)
     val users = repository.users
-
-    fun getUser(email: String?): User? {
-        var user: User? = User()
-        if (user != null) {
-            viewModelScope.launch(Dispatchers.IO) {
-                user = email?.let { repository.getUserByEmail(it) }
-            }
-        }
-        return user
-    }
 }

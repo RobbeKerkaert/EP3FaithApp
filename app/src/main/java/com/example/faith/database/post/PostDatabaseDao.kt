@@ -19,12 +19,6 @@ interface PostDatabaseDao {
     suspend fun update(post: DatabasePost)
 
     /**
-     * Updates a post's state
-     */
-    @Update
-    suspend fun updatePostState(post: DatabasePost)
-
-    /**
      * Deletes post with postId from table
      */
     @Delete
@@ -73,7 +67,4 @@ interface PostDatabaseDao {
     @Query("SELECT * from post_table WHERE userId IN (:userIdList) AND postState = :postState")
     fun getMonitorPostsByPostState(userIdList: List<Long>, postState: PostState): LiveData<List<DatabasePost>>
 
-    @Transaction
-    @Query("SELECT * FROM post_table")
-    fun getPostsWithReactions(): List<DatabasePostReactions>
 }

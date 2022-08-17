@@ -1,8 +1,7 @@
 package com.example.faith.database.post
 
+import android.graphics.Bitmap
 import androidx.room.*
-import com.example.faith.database.reaction.DatabaseReaction
-import com.example.faith.database.user.DatabaseUser
 import com.example.faith.domain.Post
 import com.example.faith.domain.PostState
 
@@ -24,7 +23,10 @@ data class DatabasePost(
     var postState: PostState = PostState.NEW,
 
     @ColumnInfo(name = "favorited")
-    var isFavorite: Boolean = false
+    var isFavorite: Boolean = false,
+
+    @ColumnInfo(name = "image")
+    var image: Bitmap? = null
 )
 
 fun List<DatabasePost>.asDomainModel() : List<Post> {
@@ -35,7 +37,8 @@ fun List<DatabasePost>.asDomainModel() : List<Post> {
             userName = it.userName,
             userId = it.userId,
             postState = it.postState,
-            isFavorite = it.isFavorite
+            isFavorite = it.isFavorite,
+            image = it.image
         )
     }
 }

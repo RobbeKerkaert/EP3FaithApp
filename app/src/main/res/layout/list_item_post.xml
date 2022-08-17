@@ -19,6 +19,19 @@
         android:layout_margin="8sp"
         android:background="@drawable/post_border">
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toTopOf="@+id/postText"
+            app:layout_constraintEnd_toStartOf="@+id/makeFavoriteButton"
+            app:layout_constraintHorizontal_bias="0.552"
+            app:layout_constraintStart_toEndOf="@+id/userNameText"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            tools:srcCompat="@tools:sample/avatars" />
+
         <TextView
             android:id="@+id/userNameText"
             android:layout_width="wrap_content"
@@ -59,20 +72,19 @@
             android:id="@+id/updatePostButton"
             android:layout_width="68dp"
             android:layout_height="wrap_content"
-            android:text="@string/edit_post"
             android:onClick="@{() -> clickListener.onClickUpdate(post)}"
+            android:text="@string/edit_post"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/viewReactionsButton"
             app:layout_constraintHorizontal_bias="0.1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/postText"
             app:layout_constraintVertical_bias="1.0" />
 
         <Button
             android:id="@+id/viewReactionsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:onClick="@{() -> clickListener.onClick(post)}"
             android:text="@string/reactions"
             app:layout_constraintBottom_toBottomOf="parent"

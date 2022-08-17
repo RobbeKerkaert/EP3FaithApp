@@ -38,4 +38,10 @@ interface UserDatabaseDao {
      */
     @Query("SELECT * FROM user_table ORDER BY userName DESC")
     fun getAllUsers(): LiveData<List<DatabaseUser>>
+
+    /**
+     * Gets a specific user with the matching key as LiveDatta.
+     */
+    @Query("SELECT * from user_table WHERE userId = :key")
+    fun getUserById(key: Long): LiveData<DatabaseUser>
 }

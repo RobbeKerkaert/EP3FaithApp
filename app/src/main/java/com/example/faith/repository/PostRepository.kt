@@ -41,20 +41,22 @@ class PostRepository(private val database : FaithDatabase) {
     }
 
     suspend fun addPost(post: Post) {
-        database.postDatabaseDao.insert(DatabasePost(post.postId, post.text, post.userName, post.userId))
+        database.postDatabaseDao.insert(DatabasePost(post.postId, post.text, post.userName, post.userId, post.postState, post.isFavorite, post.image))
     }
 
     suspend fun updatePost(postId: Long, newPost: Post) {
         val oldPost = getPost(postId)
         if (oldPost != null) {
-            database.postDatabaseDao.update(DatabasePost(oldPost.postId, newPost.text, oldPost.userName, oldPost.userId, oldPost.postState, oldPost.isFavorite))
+            database.postDatabaseDao.update(DatabasePost(oldPost.postId, newPost.text, oldPost.userName, oldPost.userId, oldPost.postState, oldPost.isFavorite
+                , oldPost.image))
         }
     }
 
     suspend fun favoritePost(postId: Long) {
         val oldPost = getPost(postId)
         if (oldPost != null) {
-            database.postDatabaseDao.update(DatabasePost(oldPost.postId, oldPost.text, oldPost.userName, oldPost.userId, oldPost.postState, !oldPost.isFavorite))
+            database.postDatabaseDao.update(DatabasePost(oldPost.postId, oldPost.text, oldPost.userName, oldPost.userId, oldPost.postState, !oldPost.isFavorite
+                , oldPost.image))
         }
     }
 
@@ -74,13 +76,13 @@ class PostRepository(private val database : FaithDatabase) {
     suspend fun updatePostState(postId: Long, postState: PostState) {
         val oldPost = getPost(postId)
         if (oldPost != null) {
-            val newPost = DatabasePost(oldPost.postId, oldPost.text, oldPost.userName, oldPost.userId, oldPost.postState, oldPost.isFavorite)
+            val newPost = DatabasePost(oldPost.postId, oldPost.text, oldPost.userName, oldPost.userId, oldPost.postState, oldPost.isFavorite, oldPost.image)
             if (oldPost.postState == PostState.NEW && postState == PostState.READ) {
                 newPost.postState = PostState.READ
-                database.postDatabaseDao.updatePostState(newPost)
+                database.postDatabaseDao.update(newPost)
             } else if (oldPost.postState == PostState.READ && postState == PostState.ANSWERED) {
                 newPost.postState = PostState.ANSWERED
-                database.postDatabaseDao.updatePostState(newPost)
+                database.postDatabaseDao.update(newPost)
             }
         }
     }

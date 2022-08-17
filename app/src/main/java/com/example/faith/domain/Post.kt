@@ -1,5 +1,6 @@
 package com.example.faith.domain
 
+import android.graphics.Bitmap
 import com.example.faith.database.post.DatabasePost
 
 
@@ -9,7 +10,8 @@ data class Post(
     var userName: String = "",
     var userId: Long = 0L,
     var postState: PostState = PostState.NEW,
-    var isFavorite: Boolean = false
+    var isFavorite: Boolean = false,
+    var image: Bitmap? = null
 )
 
 fun List<Post>.asDatabaseModel() : List<DatabasePost> {
@@ -20,7 +22,8 @@ fun List<Post>.asDatabaseModel() : List<DatabasePost> {
             userName = it.userName,
             userId = it.userId,
             postState = it.postState,
-            isFavorite = it.isFavorite
+            isFavorite = it.isFavorite,
+            image = it.image
         )
     }
 }

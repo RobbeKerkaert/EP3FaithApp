@@ -21,6 +21,10 @@
     <string name="closedPosts">Closed</string>
     <string name="close">Close</string>
 
+    <!-- Monitor Overview -->
+    <string name="changeUsername">Change Username</string>
+
+
     <!-- Strings related to login | Need to remove this eventually, in favor of auth0 strings -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

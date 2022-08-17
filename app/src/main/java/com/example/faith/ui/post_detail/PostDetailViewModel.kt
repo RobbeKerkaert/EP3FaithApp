@@ -20,8 +20,7 @@ class PostDetailViewModel(private val postKey: Long = 0L, postDataSource: PostDa
     private val databasePost = MediatorLiveData<DatabasePost>()
 
     val reactions = repository.reactions
-
-    fun getPost() = databasePost
+    val post = databasePost
 
     init {
         databasePost.addSource(dbPosts.getPostByPostId(postKey), databasePost::setValue)
