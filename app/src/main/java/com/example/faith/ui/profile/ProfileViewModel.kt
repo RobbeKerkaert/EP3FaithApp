@@ -26,7 +26,7 @@ class ProfileViewModel(val database: UserDatabaseDao, application: Application) 
     var user = databaseUser
 
     init {
-        databaseUser.addSource(userDb.getUserById(CredentialsManager.getUserDetails()["userId"] as Long), databaseUser::setValue)
+        databaseUser.addSource(userDb.getUserById(CredentialsManager.getUserId()), databaseUser::setValue)
     }
 
     // For navigation

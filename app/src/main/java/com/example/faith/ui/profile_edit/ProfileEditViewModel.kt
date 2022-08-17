@@ -21,7 +21,7 @@ class ProfileEditViewModel(val database: UserDatabaseDao, application: Applicati
 
     fun editProfile(userName: String, image: Bitmap?) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateUser(CredentialsManager.getUserDetails()["userId"] as Long, userName, image)
+            repository.updateUser(CredentialsManager.getUserId(), userName, image)
         }
     }
 

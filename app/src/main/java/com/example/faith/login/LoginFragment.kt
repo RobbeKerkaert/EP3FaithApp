@@ -27,10 +27,6 @@ class LoginFragment : Fragment() {
 
     // Login/logout-related properties
     private lateinit var account: Auth0
-    private var cachedCredentials: Credentials? = null
-    private var cachedUserProfile: UserProfile? = null
-
-    private var currentUserDetails: MutableMap<String, Any> = mutableMapOf<String, Any>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
@@ -85,7 +81,7 @@ class LoginFragment : Fragment() {
 
                 override fun onSuccess(credentials: Credentials) {
                     CredentialsManager.setLoggedIn()
-                    cachedCredentials = credentials
+                    CredentialsManager.cachedCredentials = credentials
                     showSnackBar(getString(R.string.login_success_message, credentials.accessToken))
                     CredentialsManager.saveCredentials(requireContext(), credentials)
                     checkForValidToken()
@@ -108,12 +104,11 @@ class LoginFragment : Fragment() {
 
                 override fun onSuccess(payload: Void?) {
                     CredentialsManager.setLoggedOut()
-                    cachedCredentials = null
-                    cachedUserProfile = null
+                    CredentialsManager.cachedCredentials = null
+                    CredentialsManager.cachedUserProfile = null
                     updateUI()
-                    currentUserDetails["userId"] = 0
-                    currentUserDetails["userName"] = ""
-                    CredentialsManager.setUserDetails(currentUserDetails)
+                    CredentialsManager.currentUserDetails["userId"] = 0
+                    CredentialsManager.currentUserDetails["userName"] = ""
                     setNavigationVisibility()
                 }
 
@@ -123,14 +118,14 @@ class LoginFragment : Fragment() {
     // Metadata methods
     private fun getUserMetadata() {
         // Guard against getting the metadata when no user is logged in
-        if (cachedCredentials == null) {
+        if (CredentialsManager.cachedCredentials == null) {
             return
         }
 
-        val usersClient = UsersAPIClient(account, cachedCredentials!!.accessToken!!)
+        val usersClient = UsersAPIClient(account, CredentialsManager.cachedCredentials!!.accessToken!!)
 
         usersClient
-            .getProfile(cachedUserProfile!!.getId()!!)
+            .getProfile(CredentialsManager.cachedUserProfile!!.getId()!!)
             .start(object : Callback<UserProfile, ManagementException> {
 
                 override fun onFailure(exception: ManagementException) {
@@ -139,70 +134,20 @@ class LoginFragment : Fragment() {
                 }
 
                 override fun onSuccess(userProfile: UserProfile) {
-                    cachedUserProfile = userProfile
-                    updateUI()
-                    setUserDetails(userProfile)
+                    CredentialsManager.cachedUserProfile = userProfile
+                    CredentialsManager.setUserDetails(userProfile)
                     setNavigationVisibility()
-                }
-
-            })
-    }
-
-    private fun setUserMetadata(userName: String) {
-        // Guard against getting the metadata when no user is logged in
-        if (cachedCredentials == null) {
-            return
-        }
-
-        val usersClient = UsersAPIClient(account, cachedCredentials!!.accessToken!!)
-
-        currentUserDetails["userName"] = userName
-
-        usersClient
-            .updateMetadata(cachedUserProfile!!.getId()!!, currentUserDetails)
-            .start(object : Callback<UserProfile, ManagementException> {
-
-                override fun onFailure(exception: ManagementException) {
-                    showSnackBar(getString(R.string.general_failure_with_exception_code,
-                        exception.getCode()))
-                }
-
-                override fun onSuccess(profile: UserProfile) {
-                    cachedUserProfile = profile
                     updateUI()
-
-                    showSnackBar(getString(R.string.general_success_message))
                 }
 
             })
-    }
-
-    private fun setUserDetails(profile: UserProfile) {
-        val userMetadata = profile.getUserMetadata()
-        val userId = userMetadata["userId"] as String?
-        val userName = userMetadata["userName"] as String?
-        val isMonitor = userMetadata["isMonitor"] as String?
-        val userIdList = userMetadata["userIdList"] as ArrayList<Double>?
-        if (userId != null && userName != null && isMonitor != null && userIdList != null) {
-            currentUserDetails["userId"] = userId.toLong()
-            currentUserDetails["userName"] = userName.toString()
-            currentUserDetails["isMonitor"] = isMonitor.toBoolean()
-            if (currentUserDetails["isMonitor"] as Boolean) {
-                currentUserDetails["userIdList"] = userIdList.map {
-                    it.toLong()
-                }.toList()
-            } else {
-                currentUserDetails["userIdList"] = emptyList<Long>()
-            }
-            CredentialsManager.setUserDetails(currentUserDetails)
-        }
     }
 
     // UI Methods
 
     private fun showUserProfile(accessToken: String) {
         // Guard against showing the profile when no user is logged in
-        if (cachedCredentials == null) {
+        if (CredentialsManager.cachedCredentials == null) {
             return
         }
 
@@ -218,12 +163,7 @@ class LoginFragment : Fragment() {
                 }
 
                 override fun onSuccess(profile: UserProfile) {
-                    cachedUserProfile = profile
-                    var userDetails = CredentialsManager.getUserDetails()
-                    if (userDetails["userName"] != currentUserDetails["userName"]) {
-                        setUserMetadata(userDetails["userName"] as String)
-                    }
-                    updateUI()
+                    CredentialsManager.cachedUserProfile = profile
                     getUserMetadata()
                 }
 
@@ -231,7 +171,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun updateUI() {
-        val isLoggedIn = cachedCredentials != null
+        val isLoggedIn = CredentialsManager.cachedCredentials != null
 
         binding.textviewTitle.text = if (isLoggedIn) {
             getString(R.string.logged_in_title)
@@ -243,8 +183,8 @@ class LoginFragment : Fragment() {
 
         binding.textviewUserProfile.isVisible = isLoggedIn
 
-        val userName = cachedUserProfile?.name ?: ""
-        val userEmail = cachedUserProfile?.email ?: ""
+        val userName = CredentialsManager.currentUserDetails["userName"] ?: ""
+        val userEmail = CredentialsManager.cachedUserProfile?.email ?: ""
         binding.textviewUserProfile.text = getString(R.string.user_profile, userName, userEmail)
     }
 
@@ -261,7 +201,7 @@ class LoginFragment : Fragment() {
         val activity: MainActivity = context as MainActivity
         val navigationView = activity.findViewById(R.id.navView) as NavigationView
         if (CredentialsManager.isLoggedIn.value == true) {
-            if (currentUserDetails["isMonitor"] as Boolean) {
+            if (CredentialsManager.currentUserDetails["isMonitor"] as Boolean) {
                 navigationView.menu.findItem(R.id.homeFragment).isVisible = false
                 navigationView.menu.findItem(R.id.profileFragment).isVisible = false
                 navigationView.menu.findItem(R.id.monitorOverviewFragment).isVisible = true

@@ -1,5 +1,6 @@
 package com.example.faith.ui.post_detail
 
+import android.net.Credentials
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -60,7 +61,7 @@ class PostDetailFragment : Fragment() {
             var textValue = binding.reactionText.getText()
             if (!textValue.isNullOrEmpty()) {
                 var currentUserDetails = CredentialsManager.getUserDetails()
-                var reaction = Reaction(0, 0, currentUserDetails["userId"] as Long, textValue.toString(), currentUserDetails["userName"] as String)
+                var reaction = Reaction(0, 0, CredentialsManager.getUserId(), textValue.toString(), currentUserDetails["userName"] as String)
                 viewModel.addReaction(reaction)
                 binding.reactionText.setText("")
             }

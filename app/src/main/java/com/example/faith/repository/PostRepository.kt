@@ -9,6 +9,7 @@ import com.example.faith.database.post.asDomainModel
 import com.example.faith.domain.Post
 import com.example.faith.domain.PostState
 import com.example.faith.login.CredentialsManager
+import com.example.faith.login.CredentialsManager.currentUserDetails
 
 class PostRepository(private val database : FaithDatabase) {
     val posts = MediatorLiveData<List<Post>>()
@@ -16,11 +17,11 @@ class PostRepository(private val database : FaithDatabase) {
     val monitorPosts = MediatorLiveData<List<Post>>()
 
     private var postsByUserId = Transformations.map(database.postDatabaseDao
-        .getPostsByUserId(CredentialsManager.getUserDetails()["userId"] as Long)) {
+        .getPostsByUserId(CredentialsManager.getUserId())) {
         it.asDomainModel()
     }
     private var favoritePostsByUserId = Transformations.map(database.postDatabaseDao
-        .getFavoritePostsByUserId(CredentialsManager.getUserDetails()["userId"] as Long)) {
+        .getFavoritePostsByUserId(CredentialsManager.getUserId())) {
         it.asDomainModel()
     }
     private var monitorPostsByPostState = Transformations.map(database.postDatabaseDao

@@ -66,10 +66,9 @@ class PostCreateFragment : Fragment() {
         } else {
             null
         }
-        val currentUserDetails = CredentialsManager.getUserDetails()
 
         if (!textValue.isNullOrEmpty()) {
-            val post = Post(0, textValue, currentUserDetails["userName"] as String, currentUserDetails["userId"] as Long,
+            val post = Post(0, textValue, CredentialsManager.getUserDetails()["userName"] as String, CredentialsManager.getUserId(),
                     PostState.NEW, false, imageUri)
             viewModel.addPost(post)
         }

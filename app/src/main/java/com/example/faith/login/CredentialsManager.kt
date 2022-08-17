@@ -28,6 +28,8 @@ object CredentialsManager {
         .setKeySize(DEFAULT_AES_GCM_MASTER_KEY_SIZE)
         .build()
 
+    var cachedCredentials: Credentials? = null
+    var cachedUserProfile: UserProfile? = null
     var currentUserDetails: MutableMap<String, Any> = mutableMapOf<String, Any>()
 
     private val _isLoggedIn = MutableLiveData<Boolean>()
@@ -41,9 +43,31 @@ object CredentialsManager {
         _isLoggedIn.value = false
     }
 
+    fun getUserId(): Long {
+        var userId: Double = currentUserDetails["userId"] as Double
+        return userId.toLong()
+    }
+
     // Functions for metadata
-    fun setUserDetails(userDetails: MutableMap<String, Any>) {
-        currentUserDetails = userDetails
+
+    fun setUserDetails(profile: UserProfile) {
+        val userMetadata = profile.getUserMetadata()
+        val userId = userMetadata["userId"]
+        val userName = userMetadata["userName"] as String?
+        val isMonitor = userMetadata["isMonitor"]
+        val userIdList = userMetadata["userIdList"] as ArrayList<Double>?
+        if (userId != null && userName != null && isMonitor != null && userIdList != null) {
+            currentUserDetails["userId"] = userId
+            currentUserDetails["userName"] = userName.toString()
+            currentUserDetails["isMonitor"] = isMonitor
+            if (currentUserDetails["isMonitor"] as Boolean) {
+                currentUserDetails["userIdList"] = userIdList.map {
+                    it.toLong()
+                }.toList()
+            } else {
+                currentUserDetails["userIdList"] = emptyList<Long>()
+            }
+        }
     }
 
     fun getUserDetails(): MutableMap<String, Any> {
