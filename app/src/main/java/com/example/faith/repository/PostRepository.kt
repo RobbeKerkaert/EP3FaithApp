@@ -48,8 +48,7 @@ class PostRepository(private val database : FaithDatabase) {
     suspend fun updatePost(postId: Long, newPost: Post) {
         val oldPost = getPost(postId)
         if (oldPost != null) {
-            database.postDatabaseDao.update(DatabasePost(oldPost.postId, newPost.text, oldPost.userName, oldPost.userId, oldPost.postState, oldPost.isFavorite
-                , oldPost.image))
+            database.postDatabaseDao.update(DatabasePost(oldPost.postId, newPost.text, oldPost.userName, oldPost.userId, oldPost.postState, oldPost.isFavorite, oldPost.image))
         }
     }
 

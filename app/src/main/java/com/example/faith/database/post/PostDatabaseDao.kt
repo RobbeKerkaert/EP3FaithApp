@@ -10,44 +10,31 @@ interface PostDatabaseDao {
      * Creates a new post
      */
     @Insert
-    suspend fun insert(post: DatabasePost)
+    fun insert(post: DatabasePost)
 
     /**
      * Updates a post with new info, after an edit.
      */
     @Update
-    suspend fun update(post: DatabasePost)
+    fun update(post: DatabasePost)
 
     /**
      * Deletes post with postId from table
      */
     @Delete
-    suspend fun delete(post: DatabasePost)
-
-    /**
-     * Clears all posts from table
-     */
-    @Query("DELETE FROM post_table")
-    suspend fun clear()
+    fun delete(post: DatabasePost)
 
     /**
      * Gets a specific post with the matching key.
      */
     @Query("SELECT * from post_table WHERE postId = :key")
-    suspend fun get(key: Long): DatabasePost?
+    fun get(key: Long): DatabasePost?
 
     /**
      * Selects and returns the post with a given id as LiveData
      */
     @Query("SELECT * from post_table WHERE postId = :key")
     fun getPostByPostId(key: Long): LiveData<DatabasePost>
-
-    /**
-     * Selects and returns all rows in the table.
-     * sorted by id in descending order. Should probably get something else for this.
-     */
-    @Query("SELECT * FROM post_table ORDER BY postId DESC")
-    fun getAllPosts(): LiveData<List<DatabasePost>>
 
     /**
      * Selects and returns all posts with a given userId as LiveData
@@ -66,5 +53,17 @@ interface PostDatabaseDao {
      */
     @Query("SELECT * from post_table WHERE userId IN (:userIdList) AND postState = :postState")
     fun getMonitorPostsByPostState(userIdList: List<Long>, postState: PostState): LiveData<List<DatabasePost>>
+
+    /**
+     * Returns the amount of rows within the post table
+     */
+    @Query("SELECT COUNT(postId) FROM post_table")
+    fun getCount(): Int
+
+    /**
+     * Returns the amount of favorites with postid within the post table
+     */
+    @Query("SELECT COUNT(postId) FROM post_table WHERE favorited = ${true}")
+    fun getFavoriteCount(): Int
 
 }
