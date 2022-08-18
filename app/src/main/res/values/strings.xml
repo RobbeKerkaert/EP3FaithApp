@@ -11,6 +11,8 @@
     <string name="edit_post">Edit</string>
     <string name="reactions">Reactions</string>
     <string name="cross">X</string>
+    <string name="link">Link</string>
+    <string name="postText">Post text</string>
 
     <!-- Reactions -->
     <string name="add_reaction">Add Reaction</string>

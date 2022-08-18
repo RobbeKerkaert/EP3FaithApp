@@ -11,7 +11,8 @@ data class Post(
     var userId: Long = 0L,
     var postState: PostState = PostState.NEW,
     var isFavorite: Boolean = false,
-    var image: Bitmap? = null
+    var image: Bitmap? = null,
+    var link: String = ""
 )
 
 fun List<Post>.asDatabaseModel() : List<DatabasePost> {
@@ -23,7 +24,8 @@ fun List<Post>.asDatabaseModel() : List<DatabasePost> {
             userId = it.userId,
             postState = it.postState,
             isFavorite = it.isFavorite,
-            image = it.image
+            image = it.image,
+            link = it.link
         )
     }
 }

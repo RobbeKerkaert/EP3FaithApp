@@ -42,21 +42,23 @@ class PostRepository(private val database : FaithDatabase) {
     }
 
     suspend fun addPost(post: Post) {
-        database.postDatabaseDao.insert(DatabasePost(post.postId, post.text, post.userName, post.userId, post.postState, post.isFavorite, post.image))
+        database.postDatabaseDao.insert(DatabasePost(post.postId, post.text, post.userName, post.userId, post.postState,
+            post.isFavorite, post.image, post.link))
     }
 
     suspend fun updatePost(postId: Long, newPost: Post) {
         val oldPost = getPost(postId)
         if (oldPost != null) {
-            database.postDatabaseDao.update(DatabasePost(oldPost.postId, newPost.text, oldPost.userName, oldPost.userId, oldPost.postState, oldPost.isFavorite, oldPost.image))
+            database.postDatabaseDao.update(DatabasePost(oldPost.postId, newPost.text, oldPost.userName, oldPost.userId, oldPost.postState,
+                oldPost.isFavorite, oldPost.image, oldPost.link))
         }
     }
 
     suspend fun favoritePost(postId: Long) {
         val oldPost = getPost(postId)
         if (oldPost != null) {
-            database.postDatabaseDao.update(DatabasePost(oldPost.postId, oldPost.text, oldPost.userName, oldPost.userId, oldPost.postState, !oldPost.isFavorite
-                , oldPost.image))
+            database.postDatabaseDao.update(DatabasePost(oldPost.postId, oldPost.text, oldPost.userName, oldPost.userId, oldPost.postState,
+                !oldPost.isFavorite, oldPost.image, oldPost.link))
         }
     }
 
@@ -69,14 +71,17 @@ class PostRepository(private val database : FaithDatabase) {
 
     suspend fun getPost(postId: Long): Post? {
         val databasePost = database.postDatabaseDao.get(postId)
-        val post = databasePost?.let { Post(it.postId, it.text, it.userName, it.userId, it.postState, it.isFavorite) }
+        val post = databasePost?.let { Post(it.postId, it.text, it.userName, it.userId, it.postState,
+            it.isFavorite, it.image, it.link) }
         return post
     }
 
     suspend fun updatePostState(postId: Long, postState: PostState) {
         val oldPost = getPost(postId)
         if (oldPost != null) {
-            val newPost = DatabasePost(oldPost.postId, oldPost.text, oldPost.userName, oldPost.userId, oldPost.postState, oldPost.isFavorite, oldPost.image)
+            val newPost = DatabasePost(oldPost.postId, oldPost.text, oldPost.userName, oldPost.userId, oldPost.postState,
+                oldPost.isFavorite, oldPost.image, oldPost.link)
+
             if (oldPost.postState == PostState.NEW && postState == PostState.READ) {
                 newPost.postState = PostState.READ
                 database.postDatabaseDao.update(newPost)
@@ -85,10 +90,5 @@ class PostRepository(private val database : FaithDatabase) {
                 database.postDatabaseDao.update(newPost)
             }
         }
-    }
-
-    fun getPostsByPostState(postState: PostState): LiveData<List<Post>> {
-        val databasePostList = database.postDatabaseDao.getMonitorPostsByPostState(CredentialsManager.getUserDetails()["userIdList"] as List<Long>, postState)
-        return databasePostList as LiveData<List<Post>>
     }
 }

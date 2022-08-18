@@ -13,7 +13,7 @@ import com.example.faith.database.user.DatabaseUser
 import com.example.faith.database.user.UserDatabaseDao
 import java.io.File
 
-@Database(entities = [DatabaseUser::class, DatabasePost::class, DatabaseReaction::class], version = 14, exportSchema = false)
+@Database(entities = [DatabaseUser::class, DatabasePost::class, DatabaseReaction::class], version = 15, exportSchema = false)
 
 @TypeConverters(Converters::class)
 abstract class FaithDatabase() : RoomDatabase() {

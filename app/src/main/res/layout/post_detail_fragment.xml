@@ -36,11 +36,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/postImage" />
 
+        <TextView
+            android:id="@+id/postDetailLink"
+            android:layout_width="366dp"
+            android:layout_height="29dp"
+            android:layout_marginTop="12dp"
+            android:autoLink="web"
+            android:text="@{postDetailViewModel.post.link}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.482"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/postDetailText" />
+
         <EditText
             android:id="@+id/reactionText"
             android:layout_width="265dp"
             android:layout_height="44dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="16dp"
             android:ems="10"
             android:gravity="start|top"
@@ -49,19 +61,18 @@
             app:layout_constraintEnd_toStartOf="@+id/addReactionButton"
             app:layout_constraintHorizontal_bias="0.695"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/postDetailText"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/postDetailLink" />
 
         <Button
             android:id="@+id/addReactionButton"
             android:layout_width="67dp"
             android:layout_height="48dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="8dp"
             android:text="@string/add"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.954"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/postDetailText" />
+            app:layout_constraintTop_toBottomOf="@+id/postDetailLink" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout5"

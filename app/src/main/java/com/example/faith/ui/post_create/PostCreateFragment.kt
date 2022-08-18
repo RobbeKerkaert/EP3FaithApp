@@ -61,6 +61,7 @@ class PostCreateFragment : Fragment() {
 
     private  fun insertDataToDatabase(binding: PostCreateFragmentBinding) {
         val textValue = binding.createPostText.getText().toString()
+        val link = binding.postLinkText.getText().toString()
         val imageUri: Bitmap? = if (imageView.drawable != null) {
             (imageView.drawable as BitmapDrawable).bitmap
         } else {
@@ -69,7 +70,7 @@ class PostCreateFragment : Fragment() {
 
         if (!textValue.isNullOrEmpty()) {
             val post = Post(0, textValue, CredentialsManager.getUserDetails()["userName"] as String, CredentialsManager.getUserId(),
-                    PostState.NEW, false, imageUri)
+                    PostState.NEW, false, imageUri, link)
             viewModel.addPost(post)
         }
     }

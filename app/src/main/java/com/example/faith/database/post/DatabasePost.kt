@@ -26,7 +26,10 @@ data class DatabasePost(
     var isFavorite: Boolean = false,
 
     @ColumnInfo(name = "image")
-    var image: Bitmap? = null
+    var image: Bitmap? = null,
+
+    @ColumnInfo(name = "link")
+    var link: String = ""
 )
 
 fun List<DatabasePost>.asDomainModel() : List<Post> {
@@ -38,7 +41,8 @@ fun List<DatabasePost>.asDomainModel() : List<Post> {
             userId = it.userId,
             postState = it.postState,
             isFavorite = it.isFavorite,
-            image = it.image
+            image = it.image,
+            link = it.link
         )
     }
 }

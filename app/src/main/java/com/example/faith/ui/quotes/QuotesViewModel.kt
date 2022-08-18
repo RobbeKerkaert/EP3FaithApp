@@ -17,12 +17,10 @@ class QuotesViewModel(private val repository: QuoteRepository) : ViewModel() {
         request.enqueue(object : Callback<List<Quote>> {
             override fun onResponse(call: Call<List<Quote>>, response: Response<List<Quote>>) {
                 quote.value = response.body()?.first()?.q.toString()
-                println("It worked: ${response.message()}")
-                println(quote.value)
             }
 
             override fun onFailure(call: Call<List<Quote>>, t: Throwable) {
-                println("It failed: ${t.message}")
+                println("Getting the quote failed: ${t.message}")
             }
 
         })

@@ -13,8 +13,10 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/createPostText"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.303"
             tools:srcCompat="@tools:sample/avatars" />
 
         <EditText
@@ -22,12 +24,13 @@
             android:layout_width="281dp"
             android:layout_height="139dp"
             android:ems="10"
+            android:hint="@string/postText"
             android:inputType="textMultiLine"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.445" />
+            app:layout_constraintVertical_bias="0.444" />
 
         <Button
             android:id="@+id/createPostButton"
@@ -38,13 +41,28 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/createPostText" />
+            app:layout_constraintTop_toBottomOf="@+id/createPostText"
+            app:layout_constraintVertical_bias="0.348" />
 
         <Button
             android:id="@+id/pickImageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add image"
+            app:layout_constraintBottom_toTopOf="@+id/createPostText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pickImage"
+            app:layout_constraintVertical_bias="0.531" />
+
+        <EditText
+            android:id="@+id/postLinkText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/link"
+            android:inputType="textPersonName"
             app:layout_constraintBottom_toTopOf="@+id/createPostButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
