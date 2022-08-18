@@ -3,6 +3,7 @@
     <string name="profile">Profile</string>
     <string name="home">Home</string>
     <string name="post_overview">Post Overview</string>
+    <string name="quotes">Inspirational Quotes</string>
 
     <!-- Posts -->
     <string name="create_post">Create Post</string>
@@ -24,6 +25,9 @@
     <!-- Monitor Overview -->
     <string name="changeUsername">Change Username</string>
 
+    <!-- Quotes -->
+    <string name="newQuote">Get new quote</string>
+    <string name="inspirationalQuote">Inspirational Quote</string>
 
     <!-- Strings related to login | Need to remove this eventually, in favor of auth0 strings -->
     <string name="prompt_email">Email</string>

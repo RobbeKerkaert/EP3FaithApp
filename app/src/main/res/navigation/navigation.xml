@@ -38,6 +38,9 @@
         <action
             android:id="@+id/action_loginFragment_to_monitorOverviewFragment"
             app:destination="@id/monitorOverviewFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_quotesFragment"
+            app:destination="@id/quotesFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -129,6 +132,15 @@
             app:destination="@id/postDetailFragment" />
         <action
             android:id="@+id/action_monitorOverviewFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/quotesFragment"
+        android:name="com.example.faith.ui.quotes.QuotesFragment"
+        android:label="quotes_fragment"
+        tools:layout="@layout/quotes_fragment" >
+        <action
+            android:id="@+id/action_quotesFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
 </navigation>
