@@ -3,12 +3,10 @@ package com.example.faith.ui.reaction_edit
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.faith.database.post.PostDatabaseDao
 import com.example.faith.database.reaction.ReactionDatabaseDao
-import com.example.faith.ui.post_edit.PostEditViewModel
 import java.lang.IllegalArgumentException
 
-class ReactionEditViewModelFactory (
+class ReactionEditViewModelFactory(
     private val reactionId: Long,
     private val reactionDataSource: ReactionDatabaseDao,
     private val application: Application

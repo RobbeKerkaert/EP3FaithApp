@@ -1,11 +1,11 @@
 package com.example.faith.ui.post_edit
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.faith.MainActivity
@@ -18,14 +18,22 @@ class PostEditFragment : Fragment() {
 
     private lateinit var viewModel: PostEditViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         // For action bar title
         (activity as MainActivity).supportActionBar?.title = "Post Edit"
 
         // Necessary starter things
-        val binding = DataBindingUtil.inflate<PostEditFragmentBinding>(inflater,
-            R.layout.post_edit_fragment, container, false)
+        val binding = DataBindingUtil.inflate<PostEditFragmentBinding>(
+            inflater,
+            R.layout.post_edit_fragment,
+            container,
+            false
+        )
 
         val arguments = PostEditFragmentArgs.fromBundle(requireArguments())
 
@@ -34,7 +42,6 @@ class PostEditFragment : Fragment() {
 
         val viewModelFactory = PostEditViewModelFactory(arguments.postId, postDataSource, application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(PostEditViewModel::class.java)
-
 
         // OnClickListeners
         binding.submitEditButton.setOnClickListener {
@@ -45,8 +52,7 @@ class PostEditFragment : Fragment() {
         return binding.root
     }
 
-
-    private  fun editData(binding: PostEditFragmentBinding) {
+    private fun editData(binding: PostEditFragmentBinding) {
         val textValue = binding.editPostText.getText().toString()
 
         if (!textValue.isNullOrEmpty()) {

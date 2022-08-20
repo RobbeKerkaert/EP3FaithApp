@@ -4,8 +4,6 @@ import android.graphics.Bitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.Relation
-import com.example.faith.database.post.DatabasePost
 import com.example.faith.domain.User
 
 @Entity(tableName = "user_table")
@@ -23,7 +21,7 @@ data class DatabaseUser(
     var image: Bitmap? = null
 )
 
-fun List<DatabaseUser>.asDomainModel() : List<User> {
+fun List<DatabaseUser>.asDomainModel(): List<User> {
     return map {
         User(
             userId = it.userId,

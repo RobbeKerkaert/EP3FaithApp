@@ -1,16 +1,14 @@
 package com.example.faith.ui.home
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.faith.databinding.ListItemPostBinding
 import com.example.faith.domain.Post
 
-class PostAdapter(val clickListener: PostListener) : ListAdapter<Post, PostAdapter.ViewHolder>(PostDiffCallback()){
+class PostAdapter(val clickListener: PostListener) : ListAdapter<Post, PostAdapter.ViewHolder>(PostDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
@@ -21,12 +19,10 @@ class PostAdapter(val clickListener: PostListener) : ListAdapter<Post, PostAdapt
         return ViewHolder.from(parent)
     }
 
-    class ViewHolder private constructor(val binding: ListItemPostBinding)
-        : RecyclerView.ViewHolder(binding.root){
+    class ViewHolder private constructor(val binding: ListItemPostBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(clickListener: PostListener, item: Post) {
             binding.post = item
-//            binding.imageView.setImageURI(item.imageUri.toUri())
             binding.clickListener = clickListener
             binding.executePendingBindings()
         }
@@ -39,7 +35,6 @@ class PostAdapter(val clickListener: PostListener) : ListAdapter<Post, PostAdapt
             }
         }
     }
-
 }
 
 class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
@@ -50,7 +45,6 @@ class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
     override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
         return oldItem == newItem
     }
-
 }
 
 class PostListener(val clickListener: (postId: Long, operation: Int) -> Unit) {

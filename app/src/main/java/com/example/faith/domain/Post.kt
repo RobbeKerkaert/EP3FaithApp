@@ -3,7 +3,6 @@ package com.example.faith.domain
 import android.graphics.Bitmap
 import com.example.faith.database.post.DatabasePost
 
-
 data class Post(
     var postId: Long = 0L,
     var text: String = "",
@@ -15,7 +14,7 @@ data class Post(
     var link: String = ""
 )
 
-fun List<Post>.asDatabaseModel() : List<DatabasePost> {
+fun List<Post>.asDatabaseModel(): List<DatabasePost> {
     return map {
         DatabasePost(
             postId = it.postId,

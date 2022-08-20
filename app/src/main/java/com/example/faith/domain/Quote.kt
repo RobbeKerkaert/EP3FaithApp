@@ -9,5 +9,5 @@ data class Quote(
 )
 
 data class QuoteList(
-    var quotes: List<Quote>
-    )
+    var quotes: List<Quote>,
+)

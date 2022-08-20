@@ -1,10 +1,9 @@
 package com.example.faith.api
 
 import com.example.faith.domain.Quote
-import com.example.faith.domain.QuoteList
 import retrofit2.Call
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
 interface ApiService {
@@ -26,5 +25,4 @@ interface ApiService {
             return apiService!!
         }
     }
-
 }

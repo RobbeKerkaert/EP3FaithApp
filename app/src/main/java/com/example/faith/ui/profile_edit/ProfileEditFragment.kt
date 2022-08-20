@@ -4,15 +4,14 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.net.wifi.hotspot2.pps.Credential
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.auth0.android.Auth0
 import com.auth0.android.callback.Callback
@@ -22,14 +21,9 @@ import com.auth0.android.result.UserProfile
 import com.example.faith.MainActivity
 import com.example.faith.R
 import com.example.faith.database.FaithDatabase
-import com.example.faith.databinding.FragmentLoginBinding
-import com.example.faith.databinding.PostCreateFragmentBinding
 import com.example.faith.databinding.ProfileEditFragmentBinding
 import com.example.faith.login.CredentialsManager
 import com.example.faith.ui.post_create.PostCreateFragment
-import com.example.faith.ui.post_create.PostCreateViewModel
-import com.example.faith.ui.post_create.PostCreateViewModelFactory
-import com.google.android.material.snackbar.Snackbar
 
 class ProfileEditFragment : Fragment() {
 
@@ -43,7 +37,8 @@ class ProfileEditFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // For action bar title
@@ -55,7 +50,7 @@ class ProfileEditFragment : Fragment() {
         )
 
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate<ProfileEditFragmentBinding>(inflater,R.layout.profile_edit_fragment, container, false)
+        binding = DataBindingUtil.inflate<ProfileEditFragmentBinding>(inflater, R.layout.profile_edit_fragment, container, false)
         val application = requireNotNull(this.activity).application
         val dataSource = FaithDatabase.getInstance(application).userDatabaseDao
         val viewModelFactory = ProfileEditViewModelFactory(dataSource, application)
@@ -113,29 +108,16 @@ class ProfileEditFragment : Fragment() {
 
         usersClient
             .updateMetadata(CredentialsManager.cachedUserProfile!!.getId()!!, CredentialsManager.currentUserDetails)
-            .start(object : Callback<UserProfile, ManagementException> {
+            .start(
+                object : Callback<UserProfile, ManagementException> {
 
-                override fun onFailure(exception: ManagementException) {
-//                    showSnackBar(getString(R.string.general_failure_with_exception_code,
-//                        exception.getCode()))
+                    override fun onFailure(exception: ManagementException) {
+                    }
+
+                    override fun onSuccess(profile: UserProfile) {
+                        CredentialsManager.cachedUserProfile = profile
+                    }
                 }
-
-                override fun onSuccess(profile: UserProfile) {
-                    CredentialsManager.cachedUserProfile = profile
-
-//                    showSnackBar(getString(R.string.general_success_message))
-                }
-
-            })
+            )
     }
-
-    private fun showSnackBar(text: String) {
-        Snackbar
-            .make(
-                binding.root,
-                text,
-                Snackbar.LENGTH_LONG
-            ).show()
-    }
-
 }

@@ -22,7 +22,6 @@ class QuotesViewModel(private val repository: QuoteRepository) : ViewModel() {
             override fun onFailure(call: Call<List<Quote>>, t: Throwable) {
                 println("Getting the quote failed: ${t.message}")
             }
-
         })
     }
 }

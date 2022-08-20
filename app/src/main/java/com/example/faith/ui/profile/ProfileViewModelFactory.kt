@@ -3,7 +3,6 @@ package com.example.faith.ui.profile
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.faith.database.post.PostDatabaseDao
 import com.example.faith.database.user.UserDatabaseDao
 import java.lang.IllegalArgumentException
 

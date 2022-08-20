@@ -1,9 +1,13 @@
 package com.example.faith.ui.login
 
-import androidx.fragment.app.Fragment
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.AuthenticationException
@@ -13,14 +17,12 @@ import com.auth0.android.management.UsersAPIClient
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.auth0.android.result.UserProfile
-import com.example.faith.databinding.FragmentLoginBinding
-import com.example.faith.R
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.view.isVisible
-import androidx.databinding.DataBindingUtil
 import com.example.faith.MainActivity
+import com.example.faith.R
+import com.example.faith.databinding.FragmentLoginBinding
 import com.example.faith.login.CredentialsManager
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
@@ -28,8 +30,11 @@ class LoginFragment : Fragment() {
     // Login/logout-related properties
     private lateinit var account: Auth0
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         // For action bar title
         (activity as MainActivity).supportActionBar?.title = "Log In"
@@ -55,12 +60,11 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
-    private fun checkForValidToken(){
+    private fun checkForValidToken() {
         val token = CredentialsManager.getAccessToken(requireContext())
-        if(token != null){
+        if (token != null) {
             showUserProfile(token)
-        }
-        else {
+        } else {
             Toast.makeText(context, "Something went wrong with the login", Toast.LENGTH_SHORT).show()
         }
     }
@@ -73,46 +77,54 @@ class LoginFragment : Fragment() {
             .withScheme(getString(R.string.com_auth0_scheme))
             .withScope(getString(R.string.login_scopes))
             .withAudience(getString(R.string.login_audience, getString(R.string.com_auth0_domain)))
-            .start(requireContext(), object : Callback<Credentials, AuthenticationException> {
+            .start(
+                requireContext(),
+                object : Callback<Credentials, AuthenticationException> {
 
-                override fun onFailure(exception: AuthenticationException) {
-                    showSnackBar(getString(R.string.login_failure_message, exception.getCode()))
+                    override fun onFailure(exception: AuthenticationException) {
+                        showSnackBar(getString(R.string.login_failure_message, exception.getCode()))
+                    }
+
+                    override fun onSuccess(credentials: Credentials) {
+                        CredentialsManager.setLoggedIn()
+                        CredentialsManager.cachedCredentials = credentials
+                        showSnackBar(getString(R.string.login_success_message, credentials.accessToken))
+                        CredentialsManager.saveCredentials(requireContext(), credentials)
+                        checkForValidToken()
+                    }
                 }
-
-                override fun onSuccess(credentials: Credentials) {
-                    CredentialsManager.setLoggedIn()
-                    CredentialsManager.cachedCredentials = credentials
-                    showSnackBar(getString(R.string.login_success_message, credentials.accessToken))
-                    CredentialsManager.saveCredentials(requireContext(), credentials)
-                    checkForValidToken()
-                }
-            })
-
+            )
     }
 
     private fun logout() {
         WebAuthProvider
             .logout(account)
             .withScheme(getString(R.string.com_auth0_scheme))
-            .start(requireContext(), object : Callback<Void?, AuthenticationException> {
+            .start(
+                requireContext(),
+                object : Callback<Void?, AuthenticationException> {
 
-                override fun onFailure(exception: AuthenticationException) {
-                    updateUI()
-                    showSnackBar(getString(R.string.general_failure_with_exception_code,
-                        exception.getCode()))
+                    override fun onFailure(exception: AuthenticationException) {
+                        updateUI()
+                        showSnackBar(
+                            getString(
+                                R.string.general_failure_with_exception_code,
+                                exception.getCode()
+                            )
+                        )
+                    }
+
+                    override fun onSuccess(payload: Void?) {
+                        CredentialsManager.setLoggedOut()
+                        CredentialsManager.cachedCredentials = null
+                        CredentialsManager.cachedUserProfile = null
+                        updateUI()
+                        CredentialsManager.currentUserDetails["userId"] = 0
+                        CredentialsManager.currentUserDetails["userName"] = ""
+                        setNavigationVisibility()
+                    }
                 }
-
-                override fun onSuccess(payload: Void?) {
-                    CredentialsManager.setLoggedOut()
-                    CredentialsManager.cachedCredentials = null
-                    CredentialsManager.cachedUserProfile = null
-                    updateUI()
-                    CredentialsManager.currentUserDetails["userId"] = 0
-                    CredentialsManager.currentUserDetails["userName"] = ""
-                    setNavigationVisibility()
-                }
-
-            })
+            )
     }
 
     // Metadata methods
@@ -126,21 +138,26 @@ class LoginFragment : Fragment() {
 
         usersClient
             .getProfile(CredentialsManager.cachedUserProfile!!.getId()!!)
-            .start(object : Callback<UserProfile, ManagementException> {
+            .start(
+                object : Callback<UserProfile, ManagementException> {
 
-                override fun onFailure(exception: ManagementException) {
-                    showSnackBar(getString(R.string.general_failure_with_exception_code,
-                        exception.getCode()))
+                    override fun onFailure(exception: ManagementException) {
+                        showSnackBar(
+                            getString(
+                                R.string.general_failure_with_exception_code,
+                                exception.getCode()
+                            )
+                        )
+                    }
+
+                    override fun onSuccess(userProfile: UserProfile) {
+                        CredentialsManager.cachedUserProfile = userProfile
+                        CredentialsManager.setUserDetails(userProfile)
+                        setNavigationVisibility()
+                        updateUI()
+                    }
                 }
-
-                override fun onSuccess(userProfile: UserProfile) {
-                    CredentialsManager.cachedUserProfile = userProfile
-                    CredentialsManager.setUserDetails(userProfile)
-                    setNavigationVisibility()
-                    updateUI()
-                }
-
-            })
+            )
     }
 
     // UI Methods
@@ -158,15 +175,18 @@ class LoginFragment : Fragment() {
             .start(object : Callback<UserProfile, AuthenticationException> {
 
                 override fun onFailure(exception: AuthenticationException) {
-                    showSnackBar(getString(R.string.general_failure_with_exception_code,
-                        exception.getCode()))
+                    showSnackBar(
+                        getString(
+                            R.string.general_failure_with_exception_code,
+                            exception.getCode()
+                        )
+                    )
                 }
 
                 override fun onSuccess(profile: UserProfile) {
                     CredentialsManager.cachedUserProfile = profile
                     getUserMetadata()
                 }
-
             })
     }
 

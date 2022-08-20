@@ -10,8 +10,7 @@ import com.example.faith.repository.PostRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PostCreateViewModel(val database: PostDatabaseDao, application: Application) :
-    AndroidViewModel(application) {
+class PostCreateViewModel(val database: PostDatabaseDao, application: Application) : AndroidViewModel(application) {
 
     val db = FaithDatabase.getInstance(application.applicationContext)
     private val repository = PostRepository(db)

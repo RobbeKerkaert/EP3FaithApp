@@ -11,7 +11,6 @@ import com.example.faith.database.reaction.DatabaseReaction
 import com.example.faith.database.reaction.ReactionDatabaseDao
 import com.example.faith.database.user.UserDatabaseDao
 import junit.framework.Assert.assertEquals
-import org.bouncycastle.util.test.FixedSecureRandom
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -42,9 +41,9 @@ class FaithTest {
     }
 
     private fun newPosts() {
-        for(loop in 1..2) {
+        for (loop in 1..2) {
             for (post in 1..3) {
-                val databasePost = DatabasePost(0, "Test${post}", "Jon${post}", post.toLong())
+                val databasePost = DatabasePost(0, "Test$post", "Jon$post", post.toLong())
                 if (loop == 2) {
                     databasePost.isFavorite = true
                 }
@@ -55,8 +54,15 @@ class FaithTest {
 
     private fun newReactions() {
         for (loop in 1..3) {
-            reactionDatabaseDao.insert(DatabaseReaction(0, loop.toLong(), loop.toLong(),
-                "testreaction${loop}", "Jon${loop}"))
+            reactionDatabaseDao.insert(
+                DatabaseReaction(
+                    0,
+                    loop.toLong(),
+                    loop.toLong(),
+                    "testreaction$loop",
+                    "Jon$loop"
+                )
+            )
         }
     }
 
@@ -89,7 +95,12 @@ class FaithTest {
     fun editPost() {
         newPosts()
         assertEquals("Test1", postDatabaseDao.get(1)?.text)
-        postDatabaseDao.update(DatabasePost(1, "Updated"))
+        postDatabaseDao.update(
+            DatabasePost(
+                1,
+                "Updated"
+            )
+        )
         assertEquals("Updated", postDatabaseDao.get(1)?.text)
     }
 
@@ -98,7 +109,14 @@ class FaithTest {
     fun addPost() {
         newPosts()
         assertEquals(6, postDatabaseDao.getCount())
-        postDatabaseDao.insert(DatabasePost(0, "Addedpost", "Jef", 4))
+        postDatabaseDao.insert(
+            DatabasePost(
+                0,
+                "Addedpost",
+                "Jef",
+                4
+            )
+        )
         assertEquals(7, postDatabaseDao.getCount())
         assertEquals("Addedpost", postDatabaseDao.get(7)?.text)
     }
@@ -135,8 +153,15 @@ class FaithTest {
     fun addReaction() {
         newPosts()
         newReactions()
-        reactionDatabaseDao.insert(DatabaseReaction(0, 1, 1,
-            "testreaction", "Jon1"))
+        reactionDatabaseDao.insert(
+            DatabaseReaction(
+                0,
+                1,
+                1,
+                "testreaction",
+                "Jon1"
+            )
+        )
         assertEquals(4, reactionDatabaseDao.getCount())
     }
 
@@ -156,27 +181,15 @@ class FaithTest {
         newPosts()
         newReactions()
         assertEquals("testreaction1", reactionDatabaseDao.get(1)?.text)
-        reactionDatabaseDao.update(DatabaseReaction(1, 1, 1, "UpdatedReaction", "Jon1"))
+        reactionDatabaseDao.update(
+            DatabaseReaction(
+                1,
+                1,
+                1,
+                "UpdatedReaction",
+                "Jon1"
+            )
+        )
         assertEquals("UpdatedReaction", reactionDatabaseDao.get(1)?.text)
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

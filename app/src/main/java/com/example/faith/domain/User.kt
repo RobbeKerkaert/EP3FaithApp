@@ -1,7 +1,6 @@
 package com.example.faith.domain
 
 import android.graphics.Bitmap
-import androidx.room.ColumnInfo
 import com.example.faith.database.user.DatabaseUser
 
 data class User(
@@ -12,7 +11,7 @@ data class User(
     var image: Bitmap? = null
 )
 
-fun List<User>.asDatabaseModel() : List<DatabaseUser> {
+fun List<User>.asDatabaseModel(): List<DatabaseUser> {
     return map {
         DatabaseUser(
             userId = it.userId,

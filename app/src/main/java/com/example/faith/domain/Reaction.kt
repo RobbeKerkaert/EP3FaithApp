@@ -10,7 +10,7 @@ data class Reaction(
     var userName: String = ""
 )
 
-fun List<Reaction>.asDatabaseModel() : List<DatabaseReaction> {
+fun List<Reaction>.asDatabaseModel(): List<DatabaseReaction> {
     return map {
         DatabaseReaction(
             reactionId = it.reactionId,
@@ -18,7 +18,6 @@ fun List<Reaction>.asDatabaseModel() : List<DatabaseReaction> {
             userId = it.userId,
             text = it.text,
             userName = it.userName
-
         )
     }
 }

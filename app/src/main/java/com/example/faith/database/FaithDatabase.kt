@@ -11,7 +11,6 @@ import com.example.faith.database.reaction.DatabaseReaction
 import com.example.faith.database.reaction.ReactionDatabaseDao
 import com.example.faith.database.user.DatabaseUser
 import com.example.faith.database.user.UserDatabaseDao
-import java.io.File
 
 @Database(entities = [DatabaseUser::class, DatabasePost::class, DatabaseReaction::class], version = 15, exportSchema = false)
 

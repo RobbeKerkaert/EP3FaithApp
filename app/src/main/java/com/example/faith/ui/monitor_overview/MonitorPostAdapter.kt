@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.faith.databinding.ListItemPostMonitorBinding
 import com.example.faith.domain.Post
 
-class MonitorPostAdapter(val clickListener: MonitorPostListener) : ListAdapter<Post, MonitorPostAdapter.ViewHolder>(MonitorPostDiffCallback()){
+class MonitorPostAdapter(val clickListener: MonitorPostListener) : ListAdapter<Post, MonitorPostAdapter.ViewHolder>(MonitorPostDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
@@ -19,8 +19,7 @@ class MonitorPostAdapter(val clickListener: MonitorPostListener) : ListAdapter<P
         return ViewHolder.from(parent)
     }
 
-    class ViewHolder private constructor(val binding: ListItemPostMonitorBinding)
-        : RecyclerView.ViewHolder(binding.root){
+    class ViewHolder private constructor(val binding: ListItemPostMonitorBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(clickListener: MonitorPostListener, item: Post) {
             binding.post = item
@@ -36,7 +35,6 @@ class MonitorPostAdapter(val clickListener: MonitorPostListener) : ListAdapter<P
             }
         }
     }
-
 }
 
 class MonitorPostDiffCallback : DiffUtil.ItemCallback<Post>() {
@@ -47,7 +45,6 @@ class MonitorPostDiffCallback : DiffUtil.ItemCallback<Post>() {
     override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
         return oldItem == newItem
     }
-
 }
 
 class MonitorPostListener(val clickListener: (postId: Long, operation: Int) -> Unit) {

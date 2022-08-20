@@ -1,9 +1,11 @@
 package com.example.faith.database.reaction
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
-import com.example.faith.database.post.DatabasePost
-import com.example.faith.database.post.DatabasePostReactions
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface ReactionDatabaseDao {

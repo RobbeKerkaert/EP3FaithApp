@@ -11,10 +11,9 @@ import com.example.faith.database.post.asDomainModel
 import com.example.faith.domain.PostState
 import com.example.faith.login.CredentialsManager
 import com.example.faith.repository.PostRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MonitorOverviewViewModel(val database: PostDatabaseDao, application: Application): AndroidViewModel(application) {
+class MonitorOverviewViewModel(val database: PostDatabaseDao, application: Application) : AndroidViewModel(application) {
 
     // For database
     val db = FaithDatabase.getInstance(application.applicationContext)
@@ -26,7 +25,7 @@ class MonitorOverviewViewModel(val database: PostDatabaseDao, application: Appli
     val navigateToPostDetail
         get() = _navigateToPostDetail
 
-    fun onPostClicked(postId: Long){
+    fun onPostClicked(postId: Long) {
         _navigateToPostDetail.value = postId
     }
     fun onPostNavigated() {
@@ -34,9 +33,15 @@ class MonitorOverviewViewModel(val database: PostDatabaseDao, application: Appli
     }
 
     fun movePostState(state: PostState) {
-        var monitorPostsByPostState = Transformations.map(db.postDatabaseDao
-            .getMonitorPostsByPostState(CredentialsManager.getUserDetails()["userIdList"] as List<Long>, state)) {
-            it.asDomainModel() }
+        var monitorPostsByPostState = Transformations.map(
+            db.postDatabaseDao
+                .getMonitorPostsByPostState(
+                    CredentialsManager.getUserDetails()["userIdList"] as List<Long>,
+                    state
+                )
+        ) {
+            it.asDomainModel()
+        }
         monitorPosts.addSource(monitorPostsByPostState) {
             monitorPosts.setValue(it)
         }
@@ -47,7 +52,7 @@ class MonitorOverviewViewModel(val database: PostDatabaseDao, application: Appli
     val changePostState
         get() = _changePostState
 
-    fun onPostCloseClicked(postId: Long){
+    fun onPostCloseClicked(postId: Long) {
         _changePostState.value = postId
     }
     fun onPostClosed() {
@@ -55,7 +60,6 @@ class MonitorOverviewViewModel(val database: PostDatabaseDao, application: Appli
     }
 
     // Other functions
-
     fun updatePostState(postId: Long, postState: PostState) {
         viewModelScope.launch {
             repository.updatePostState(postId, postState)

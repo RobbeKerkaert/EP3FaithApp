@@ -1,15 +1,13 @@
 package com.example.faith.ui.post_detail
 
-import android.net.Credentials
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.faith.MainActivity
@@ -24,7 +22,11 @@ class PostDetailFragment : Fragment() {
     private lateinit var viewModel: PostDetailViewModel
     private lateinit var binding: PostDetailFragmentBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         // For action bar title
         (activity as MainActivity).supportActionBar?.title = "Post Reactions"
@@ -37,21 +39,21 @@ class PostDetailFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
         val postDataSource = FaithDatabase.getInstance(application).postDatabaseDao
-        val reactionDataSource = FaithDatabase.getInstance(application).reactionDatabaseDao
 
-        val viewModelFactory = PostDetailViewModelFactory(arguments.postId, postDataSource, reactionDataSource, application)
+        val viewModelFactory = PostDetailViewModelFactory(arguments.postId, postDataSource, application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(PostDetailViewModel::class.java)
 
         val recyclerView = binding.reactionList
 
-        val adapter = ReactionAdapter(ReactionListener {
-            reactionId, operation ->
-            if (operation == 1) {
-                viewModel.onReactionUpdateClick(reactionId)
-            } else {
-                viewModel.onReactionDeleteClick(reactionId)
+        val adapter = ReactionAdapter(
+            ReactionListener { reactionId, operation ->
+                if (operation == 1) {
+                    viewModel.onReactionUpdateClick(reactionId)
+                } else {
+                    viewModel.onReactionDeleteClick(reactionId)
+                }
             }
-        })
+        )
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -68,28 +70,38 @@ class PostDetailFragment : Fragment() {
             binding.postImage.setImageBitmap(viewModel.post.value?.image)
         }
 
-        viewModel.reactions.observe(viewLifecycleOwner, Observer {
-            adapter.submitList(it)
-        })
+        viewModel.reactions.observe(
+            viewLifecycleOwner,
+            Observer {
+                adapter.submitList(it)
+            }
+        )
 
-        viewModel.canEditReaction.observe(viewLifecycleOwner, Observer {reaction ->
-            reaction?.let {
-                this.findNavController().navigate(PostDetailFragmentDirections
-                    .actionPostDetailFragmentToReactionEditFragment(arguments.postId, reaction))
-                viewModel.onReactionUpdated()
+        viewModel.canEditReaction.observe(
+            viewLifecycleOwner,
+            Observer { reaction ->
+                reaction?.let {
+                    this.findNavController().navigate(
+                        PostDetailFragmentDirections
+                            .actionPostDetailFragmentToReactionEditFragment(arguments.postId, reaction)
+                    )
+                    viewModel.onReactionUpdated()
+                }
             }
-        })
-        viewModel.canDeleteReaction.observe(viewLifecycleOwner, Observer {reaction ->
-            reaction?.let {
-                viewModel.deleteReaction(reaction)
-                viewModel.onReactionDeleted()
+        )
+        viewModel.canDeleteReaction.observe(
+            viewLifecycleOwner,
+            Observer { reaction ->
+                reaction?.let {
+                    viewModel.deleteReaction(reaction)
+                    viewModel.onReactionDeleted()
+                }
             }
-        })
+        )
 
         binding.postDetailViewModel = viewModel
         binding.lifecycleOwner = this
 
         return binding.root
     }
-
 }

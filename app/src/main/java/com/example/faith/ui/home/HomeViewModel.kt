@@ -2,17 +2,15 @@ package com.example.faith.ui.home
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.faith.database.FaithDatabase
 import com.example.faith.database.post.PostDatabaseDao
-import com.example.faith.domain.Post
 import com.example.faith.repository.PostRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HomeViewModel(val database: PostDatabaseDao, application: Application): AndroidViewModel(application) {
+class HomeViewModel(val database: PostDatabaseDao, application: Application) : AndroidViewModel(application) {
 
     // For database
     val db = FaithDatabase.getInstance(application.applicationContext)
@@ -24,7 +22,7 @@ class HomeViewModel(val database: PostDatabaseDao, application: Application): An
     val navigateToPostDetail
         get() = _navigateToPostDetail
 
-    fun onPostClicked(postId: Long){
+    fun onPostClicked(postId: Long) {
         _navigateToPostDetail.value = postId
     }
     fun onPostNavigated() {

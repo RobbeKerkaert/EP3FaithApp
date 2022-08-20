@@ -4,15 +4,13 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.auth0.android.result.Credentials
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import androidx.security.crypto.MasterKey.*
-import com.auth0.android.jwt.JWT
+import androidx.security.crypto.MasterKey.DEFAULT_AES_GCM_MASTER_KEY_SIZE
+import androidx.security.crypto.MasterKey.DEFAULT_MASTER_KEY_ALIAS
+import com.auth0.android.result.Credentials
 import com.auth0.android.result.UserProfile
-import com.example.faith.domain.User
 
 object CredentialsManager {
 
@@ -22,7 +20,8 @@ object CredentialsManager {
 
     private val keyGenParameterSpec = KeyGenParameterSpec.Builder(
         DEFAULT_MASTER_KEY_ALIAS,
-        KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
+        KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+    )
         .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
         .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
         .setKeySize(DEFAULT_AES_GCM_MASTER_KEY_SIZE)
@@ -89,7 +88,7 @@ object CredentialsManager {
 
     // Private functions for use within the manager
     private fun buildMasterKey(context: Context): MasterKey {
-        return Builder(context, DEFAULT_MASTER_KEY_ALIAS)
+        return MasterKey.Builder(context, DEFAULT_MASTER_KEY_ALIAS)
             .setKeyGenParameterSpec(keyGenParameterSpec)
             .build()
     }

@@ -1,7 +1,11 @@
 package com.example.faith.database.post
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import com.example.faith.domain.PostState
 
 @Dao
@@ -65,5 +69,4 @@ interface PostDatabaseDao {
      */
     @Query("SELECT COUNT(postId) FROM post_table WHERE favorited = ${true}")
     fun getFavoriteCount(): Int
-
 }

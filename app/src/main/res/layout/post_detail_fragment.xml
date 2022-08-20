@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/postImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="366dp"
+            android:layout_height="140dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -59,7 +59,7 @@
             android:hint="@string/add_reaction"
             android:inputType="textMultiLine"
             app:layout_constraintEnd_toStartOf="@+id/addReactionButton"
-            app:layout_constraintHorizontal_bias="0.695"
+            app:layout_constraintHorizontal_bias="0.608"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/postDetailLink" />
 
@@ -76,17 +76,17 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout5"
-            android:layout_width="wrap_content"
-            android:layout_height="360dp"
+            android:layout_width="382dp"
+            android:layout_height="294dp"
             android:layout_margin="8sp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/post_border"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.473"
+            app:layout_constraintHorizontal_bias="0.526"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/reactionText"
-            app:layout_constraintVertical_bias="0.105">
+            app:layout_constraintVertical_bias="0.0">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reactionList"

@@ -1,7 +1,9 @@
 package com.example.faith.database.post
 
 import android.graphics.Bitmap
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.example.faith.domain.Post
 import com.example.faith.domain.PostState
 
@@ -32,7 +34,7 @@ data class DatabasePost(
     var link: String = ""
 )
 
-fun List<DatabasePost>.asDomainModel() : List<Post> {
+fun List<DatabasePost>.asDomainModel(): List<Post> {
     return map {
         Post(
             postId = it.postId,

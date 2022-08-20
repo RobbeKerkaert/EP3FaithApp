@@ -4,8 +4,6 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.faith.database.post.PostDatabaseDao
-import com.example.faith.database.reaction.ReactionDatabaseDao
-import com.example.faith.ui.post_detail.PostDetailViewModel
 import java.lang.IllegalArgumentException
 
 class PostEditViewModelFactory(

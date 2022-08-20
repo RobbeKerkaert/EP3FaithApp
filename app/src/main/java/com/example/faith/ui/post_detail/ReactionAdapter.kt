@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.faith.databinding.ListItemReactionBinding
 import com.example.faith.domain.Reaction
 
-class ReactionAdapter(val clickListener: ReactionListener) : ListAdapter<Reaction, ReactionAdapter.ViewHolder>(ReactionDiffCallback()){
+class ReactionAdapter(val clickListener: ReactionListener) : ListAdapter<Reaction, ReactionAdapter.ViewHolder>(ReactionDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
@@ -19,8 +19,7 @@ class ReactionAdapter(val clickListener: ReactionListener) : ListAdapter<Reactio
         return ViewHolder.from(parent)
     }
 
-    class ViewHolder private constructor(val binding: ListItemReactionBinding)
-        : RecyclerView.ViewHolder(binding.root){
+    class ViewHolder private constructor(val binding: ListItemReactionBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(clickListener: ReactionListener, item: Reaction) {
             binding.reaction = item
@@ -36,7 +35,6 @@ class ReactionAdapter(val clickListener: ReactionListener) : ListAdapter<Reactio
             }
         }
     }
-
 }
 
 class ReactionDiffCallback : DiffUtil.ItemCallback<Reaction>() {
@@ -47,7 +45,6 @@ class ReactionDiffCallback : DiffUtil.ItemCallback<Reaction>() {
     override fun areContentsTheSame(oldItem: Reaction, newItem: Reaction): Boolean {
         return oldItem == newItem
     }
-
 }
 
 class ReactionListener(val clickListener: (reactionId: Long, operation: Int) -> Unit) {

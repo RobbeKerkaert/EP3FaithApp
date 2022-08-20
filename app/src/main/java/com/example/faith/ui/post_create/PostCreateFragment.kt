@@ -4,14 +4,14 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.faith.MainActivity
 import com.example.faith.R
@@ -30,13 +30,22 @@ class PostCreateFragment : Fragment() {
         val IMAGE_REQUEST_CODE = 100
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         // For action bar title
         (activity as MainActivity).supportActionBar?.title = "Create Post"
 
         // Inflate the layout for this fragment
-        val binding = DataBindingUtil.inflate<PostCreateFragmentBinding>(inflater,R.layout.post_create_fragment, container, false)
+        val binding = DataBindingUtil.inflate<PostCreateFragmentBinding>(
+            inflater,
+            R.layout.post_create_fragment,
+            container,
+            false
+        )
         val application = requireNotNull(this.activity).application
         val dataSource = FaithDatabase.getInstance(application).postDatabaseDao
         val viewModelFactory = PostCreateViewModelFactory(dataSource, application)
@@ -59,7 +68,7 @@ class PostCreateFragment : Fragment() {
         return binding.root
     }
 
-    private  fun insertDataToDatabase(binding: PostCreateFragmentBinding) {
+    private fun insertDataToDatabase(binding: PostCreateFragmentBinding) {
         val textValue = binding.createPostText.getText().toString()
         val link = binding.postLinkText.getText().toString()
         val imageUri: Bitmap? = if (imageView.drawable != null) {
@@ -69,8 +78,16 @@ class PostCreateFragment : Fragment() {
         }
 
         if (!textValue.isNullOrEmpty()) {
-            val post = Post(0, textValue, CredentialsManager.getUserDetails()["userName"] as String, CredentialsManager.getUserId(),
-                    PostState.NEW, false, imageUri, link)
+            val post = Post(
+                0,
+                textValue,
+                CredentialsManager.getUserDetails()["userName"] as String,
+                CredentialsManager.getUserId(),
+                PostState.NEW,
+                false,
+                imageUri,
+                link
+            )
             viewModel.addPost(post)
         }
     }
@@ -88,5 +105,4 @@ class PostCreateFragment : Fragment() {
             imageView.tag = data?.data.toString()
         }
     }
-
 }

@@ -10,8 +10,10 @@ import com.example.faith.repository.ReactionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ReactionEditViewModel(private val reactionKey: Long = 0L, val database: ReactionDatabaseDao,
-                            application: Application
+class ReactionEditViewModel(
+    private val reactionKey: Long = 0L,
+    val database: ReactionDatabaseDao,
+    application: Application
 ) : ViewModel() {
     val db = FaithDatabase.getInstance(application.applicationContext)
     private val repository = ReactionRepository(db, 0)
