@@ -64,7 +64,9 @@
         tools:layout="@layout/post_create_fragment">
         <action
             android:id="@+id/action_postCreateFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/profileEditFragment"
@@ -73,7 +75,8 @@
         tools:layout="@layout/profile_edit_fragment">
         <action
             android:id="@+id/action_profileEditFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/postDetailFragment"
@@ -102,10 +105,14 @@
             android:defaultValue="0L" />
         <action
             android:id="@+id/action_postEditFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_postEditFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/profileFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/reactionEditFragment"
@@ -121,7 +128,9 @@
             android:defaultValue="0L" />
         <action
             android:id="@+id/action_reactionEditFragment_to_postDetailFragment"
-            app:destination="@id/postDetailFragment" />
+            app:destination="@id/postDetailFragment"
+            app:popUpTo="@id/postDetailFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/monitorOverviewFragment"

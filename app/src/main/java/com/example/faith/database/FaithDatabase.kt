@@ -42,6 +42,7 @@ abstract class FaithDatabase() : RoomDatabase() {
                     )
                         // Create database from file
                         .createFromAsset("database/faith_database.db")
+                        .allowMainThreadQueries()
                         .fallbackToDestructiveMigration()
                         .build()
                     // Assign INSTANCE to the newly created database.
