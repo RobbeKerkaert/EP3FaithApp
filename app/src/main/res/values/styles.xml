@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="favoriteButtonStyle">
+        <item name="android:textColor">#EEBC1D</item>
+    </style>
+    <style name="removeButtonStyle">
+        <item name="android:textColor">#B34242</item>
+    </style>
+</resources>
